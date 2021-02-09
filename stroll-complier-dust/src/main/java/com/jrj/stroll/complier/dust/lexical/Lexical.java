@@ -57,6 +57,15 @@ public class Lexical {
 		}
 	}
 	
+	public Token peek(int i) throws ParseException{
+		
+		if (fillQueue(i)){
+			return queue.get(i);
+		} else {
+			return Token.EOF;
+		}
+	}
+	
 	private boolean fillQueue(int i) throws ParseException{
 		
 		while (i >= queue.size()){
