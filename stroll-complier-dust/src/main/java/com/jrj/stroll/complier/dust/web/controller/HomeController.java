@@ -1,4 +1,4 @@
-package com.jrj.stroll.complier.dust.controller;
+package com.jrj.stroll.complier.dust.web.controller;
 
 import javax.servlet.http.HttpServletRequest;
 

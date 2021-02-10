@@ -3,6 +3,7 @@ package com.jrj.stroll.complier.dust.lexical;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +16,7 @@ import com.jrj.stroll.complier.dust.exception.ParseException;
  * @author chenn
  *
  */
-public class Lexical {
+public class Lexer {
 	
 	/**
 	 * document
@@ -43,9 +44,14 @@ public class Lexical {
 	private boolean hasMore;
 	private LineNumberReader reader;
 	
-	public Lexical(Reader r){
+	public Lexer(Reader r){
 		hasMore = true;
 		reader = new LineNumberReader(r);
+	}
+	
+	public Lexer(String src){
+		hasMore = true;
+		reader = new LineNumberReader(new StringReader(src));
 	}
 	
 	public Token read() throws ParseException{

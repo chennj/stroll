@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication
-public class ComplierDustApplication 
+public class DustApp 
 {
     public static void main( String[] args )
     {
-    	SpringApplication.run(ComplierDustApplication.class, args);
+    	SpringApplication.run(DustApp.class, args);
     }
 }
