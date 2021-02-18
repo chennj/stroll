@@ -2,9 +2,9 @@ package com.jrj.stroll.complier.dust.ast;
 
 import com.jrj.stroll.complier.dust.lexical.Token;
 
-public class NumberLiteral extends ASTreeLeaf{
+public class StringLiteral extends ASTreeLeaf{
 
-	public NumberLiteral(Token token) {
+	public StringLiteral(Token token) {
 		super(token);
 	}
 
