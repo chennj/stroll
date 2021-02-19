@@ -2,6 +2,7 @@ package com.jrj.stroll.complier.dust.parser;
 
 import java.util.HashSet;
 
+import com.jrj.stroll.complier.dust.ast.ASTree;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
 
 /**
@@ -36,8 +37,8 @@ public class Parser {
 	 * 执行语法分析
 	 * @param l
 	 */
-	public Parser parse(Lexer l){
-		return this;
+	public ASTree parse(Lexer l){
+		return null;
 	}
 	
 	/**
