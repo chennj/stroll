@@ -9,7 +9,17 @@ import java.util.HashMap;
  */
 public class Operators {
 
+	/**
+	 * 运算符左右结合顺序<br/>
+	 * -- 左结合：两个相同优先级的运算符连接出现时左侧的优先级高<br/>
+	 * -- 1+2+3 == ((1+2)+3)
+	 */
 	public static int LEFT = 1;
+	/**
+	 * 运算符左右结合顺序<br/>
+	 * -- 右结合：两个相同优先级的运算符连接出现时右侧侧的优先级高<br/>
+	 * x=y=3 == (x=(y=3))
+	 */
 	public static int RIGHT = 2;
 
 	private HashMap<String, Operator> opMap = new HashMap<>();
@@ -32,12 +42,13 @@ public class Operators {
 	
 	private class Operator{
 		/**
-		 * 优先级
+		 * 优先级，数值越大优先级越高
 		 */
 		private int priority;
 				
 		/**
-		 * 运算符结合方向
+		 * 运算符左右结合顺序
+		 * 
 		 */
 		private int direction;		
 		

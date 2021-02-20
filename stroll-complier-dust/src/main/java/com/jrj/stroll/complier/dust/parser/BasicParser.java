@@ -30,7 +30,7 @@ public class BasicParser {
 	Operators operators 		= new Operators();
 	
 	Parser expr0 		= rule();
-	Parser primary 		= Parser.rule(PrimaryExpr.class)
+	Parser primary 		= rule(PrimaryExpr.class)
 			.or
 			(
 				rule().sep("(").ast(expr0).sep(")"),

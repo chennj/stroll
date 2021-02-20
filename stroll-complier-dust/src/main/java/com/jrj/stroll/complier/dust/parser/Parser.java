@@ -1,8 +1,20 @@
 package com.jrj.stroll.complier.dust.parser;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jrj.stroll.complier.dust.ast.ASTree;
+import com.jrj.stroll.complier.dust.ast.ASTreeCompound;
+import com.jrj.stroll.complier.dust.ast.ASTreeLeaf;
+import com.jrj.stroll.complier.dust.ast.Identifier;
+import com.jrj.stroll.complier.dust.ast.NumberLiteral;
+import com.jrj.stroll.complier.dust.ast.StringLiteral;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
 
 /**
@@ -12,13 +24,44 @@ import com.jrj.stroll.complier.dust.lexical.Lexer;
  */
 public class Parser {
 
-	private Class<?> clz;
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	protected static int REGEX_NONE = -1;
+	protected static int REGEX_ASTREE = 0;
+	protected static int REGEX_REPEAT = 1;
+	protected static int REGEX_MEYBE = 2;
+	protected static int REGEX_OR = 3;
+	protected static int REGEX_EXPR = 4;
+	protected static int REGEX_OPTION = 5;
+	
+	/**
+	 * 非终结符类型
+	 */
+	protected int mode = REGEX_NONE;
+	
+	private Class<?> root;
+	
+	/**
+	 * 非终结符
+	 */
+	private List<Parser> NTList = new ArrayList<>();
+	
+	/**
+	 * 终结符
+	 */
+	private List<Node> TList = new ArrayList<>();
+	
+	private Operators operators;
+	
+	private HashSet<String> reserved;
 	
 	/**
 	 * 创建Parser对象
 	 * @return
 	 */
 	public static Parser rule(){
+		Parser p = new Parser();
+		p.root = ASTreeCompound.class;
 		return new Parser();
 	}
 	
@@ -29,7 +72,7 @@ public class Parser {
 	 */
 	public static Parser rule(Class<?> c){
 		Parser p = new Parser();
-		p.clz = c;
+		p.root = c;
 		return p;
 	}
 	
@@ -45,6 +88,7 @@ public class Parser {
 	 * 向语法规则中添加终结符--整形字面量
 	 */
 	public Parser number(){
+		TList.add(new Node(NumberLiteral.class,null));
 		return this;
 	}
 	
@@ -52,7 +96,8 @@ public class Parser {
 	 * 向语法规则中添加终结符--整形字面量
 	 * @param c
 	 */
-	public Parser number(Class<?> c){
+	public Parser number(Class<? extends ASTree> c){
+		TList.add(new Node(c,null));
 		return this;
 	}
 	
@@ -61,6 +106,22 @@ public class Parser {
 	 * @param r
 	 */
 	public Parser identifier(HashSet<String> r){
+		for (String s : r){
+			switch (s){
+			case "NUMBER":
+				TList.add(new Node(NumberLiteral.class,null));
+				break;
+			case "STRING":
+				TList.add(new Node(StringLiteral.class,null));
+				break;
+			case "IDENTIFIER":
+				TList.add(new Node(Identifier.class,null));
+				break;
+			default:
+				logger.error("未知的终结符："+s);
+				break;
+			}
+		}
 		return this;
 	}
 	
@@ -69,7 +130,10 @@ public class Parser {
 	 * @param c
 	 * @param r
 	 */
-	public Parser identifier(Class<?> c, HashSet<String> r){
+	public Parser identifier(Class<? extends ASTree> c, HashSet<String> r){
+		for (String s : r){
+			TList.add(new Node(c,s));
+		}
 		return this;
 	}
 	
@@ -77,13 +141,15 @@ public class Parser {
 	 * 向语法规则中添加终结符--字符串字面量
 	 */
 	public Parser string(){
+		TList.add(new Node(StringLiteral.class,null));
 		return this;
 	}
 	
 	/**
 	 * 向语法规则中添加终结符--字符串字面量
 	 */
-	public Parser string(Class<?> c){
+	public Parser string(Class<? extends ASTree> c){
+		TList.add(new Node(c,null));
 		return this;
 	}
 	
@@ -100,6 +166,9 @@ public class Parser {
 	 * @param pat
 	 */
 	public Parser sep(String... pat){
+		for (String s : pat){
+			TList.add(new Node(StringLiteral.class,s));
+		}
 		return this;
 	}
 	
@@ -108,6 +177,8 @@ public class Parser {
 	 * @param p
 	 */
 	public Parser ast(Parser p){
+		this.mode = REGEX_ASTREE;
+		NTList.add(p);
 		return this;
 	}
 	
@@ -116,6 +187,8 @@ public class Parser {
 	 * @param p
 	 */
 	public Parser option(Parser p){
+		this.mode = REGEX_OPTION;
+		NTList.add(p);
 		return this;
 	}
 	
@@ -125,6 +198,8 @@ public class Parser {
 	 * @param p
 	 */
 	public Parser maybe(Parser p){
+		this.mode = REGEX_MEYBE;
+		NTList.add(p);
 		return this;
 	}
 	
@@ -132,7 +207,11 @@ public class Parser {
 	 * 向语法规则中添加若干个由or关系连接的非终结符 p
 	 * @param p
 	 */
-	public Parser or(Parser... p){
+	public Parser or(Parser... parsers){
+		this.mode = REGEX_OR;
+		for (Parser p : parsers){
+			NTList.add(p);
+		}
 		return this;
 	}
 	
@@ -141,6 +220,8 @@ public class Parser {
 	 * @param p
 	 */
 	public Parser repeat(Parser p){
+		this.mode = REGEX_REPEAT;
+		NTList.add(p);
 		return this;
 	}
 	
@@ -150,6 +231,9 @@ public class Parser {
 	 * @param op 运算符表
 	 */
 	public Parser expression(Parser p, Operators op){
+		this.mode = REGEX_EXPR;
+		this.operators = op;
+		NTList.add(p);
 		return this;
 	}
 	
@@ -159,6 +243,10 @@ public class Parser {
 	 * @param op 运算符表
 	 */
 	public Parser expression(Class<?> c, Parser p, Operators op){
+		this.root = c;
+		this.mode = REGEX_EXPR;
+		this.operators = op;
+		NTList.add(p);
 		return this;
 	}
 	
@@ -166,6 +254,8 @@ public class Parser {
 	 * 清空语法规则
 	 */
 	public Parser reset(){
+		NTList.clear();
+		TList.clear();
 		return this;
 	}
 	
@@ -173,6 +263,9 @@ public class Parser {
 	 * 清空语法规则，将节点类赋值为c
 	 */
 	public Parser reset(Class<?> c){
+		this.root = c;
+		NTList.clear();
+		TList.clear();
 		return this;
 	}
 	
@@ -182,5 +275,25 @@ public class Parser {
 	 */
 	public Parser insertChoice(Parser p){
 		return this;
+	}
+	
+	class Node{
+		
+		Class<? extends ASTree> type;
+		Object data;
+		
+		public Node(Class<? extends ASTree> type,Object data){
+			this.type = type;
+			this.data = data;
+		}
+
+		public Class<? extends ASTree> getType() {
+			return type;
+		}
+
+		public Object getData() {
+			return data;
+		}
+		
 	}
 }

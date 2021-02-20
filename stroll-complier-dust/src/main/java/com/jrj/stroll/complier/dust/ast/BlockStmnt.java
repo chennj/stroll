@@ -1,5 +1,10 @@
 package com.jrj.stroll.complier.dust.ast;
 
-public class BlockStmnt {
+import java.util.List;
 
+public class BlockStmnt extends ASTreeCompound{
+
+	public BlockStmnt(List<ASTree> childList) {
+		super(childList);
+	}
 }

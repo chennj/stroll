@@ -8,7 +8,7 @@ public class StringLiteral extends ASTreeLeaf{
 		super(token);
 	}
 
-	public int value(){
-		return token().getLineNumber();
+	public String value(){
+		return token().getText();
 	}
 }

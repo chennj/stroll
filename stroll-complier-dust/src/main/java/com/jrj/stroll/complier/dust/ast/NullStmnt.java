@@ -1,5 +1,11 @@
 package com.jrj.stroll.complier.dust.ast;
 
-public class NullStmnt {
+import java.util.List;
+
+public class NullStmnt extends ASTreeCompound{
+
+	public NullStmnt(List<ASTree> childList) {
+		super(childList);
+	}
 
 }
