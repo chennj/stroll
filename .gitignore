@@ -1,6 +1,8 @@
 .metadata
 bin/
 tmp/
+stroll-complier-dust/.settings/
+stroll-complier-dust/target/
 *.tmp
 *.bak
 *.swp
