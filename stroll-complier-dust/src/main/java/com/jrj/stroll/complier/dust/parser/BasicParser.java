@@ -16,6 +16,7 @@ import com.jrj.stroll.complier.dust.ast.WhileStmnt;
 import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
 import com.jrj.stroll.complier.dust.lexical.Token;
+import com.jrj.stroll.complier.dust.parser.Parser.Operators;
 
 import static com.jrj.stroll.complier.dust.parser.Parser.rule;
 
