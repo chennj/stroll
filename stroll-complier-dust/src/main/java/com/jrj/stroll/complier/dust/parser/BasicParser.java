@@ -2,6 +2,8 @@ package com.jrj.stroll.complier.dust.parser;
 
 import java.util.HashSet;
 
+import org.springframework.stereotype.Component;
+
 import com.jrj.stroll.complier.dust.ast.ASTree;
 import com.jrj.stroll.complier.dust.ast.BinaryExpr;
 import com.jrj.stroll.complier.dust.ast.BlockStmnt;
@@ -25,6 +27,7 @@ import static com.jrj.stroll.complier.dust.parser.Parser.rule;
  * @author chenn
  *
  */
+@Component
 public class BasicParser {
 
 	HashSet<String> reserved 	= new HashSet<String>();

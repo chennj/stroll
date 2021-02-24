@@ -27,4 +27,9 @@ public class LexerRunner {
 		System.out.println(tokes);
 		return tokes.toString();
 	}
+	
+	public Lexer lexer(String code) throws ParseException
+	{
+		return new Lexer(code);
+	}
 }

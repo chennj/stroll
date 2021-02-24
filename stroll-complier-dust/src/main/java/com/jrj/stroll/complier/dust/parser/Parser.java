@@ -23,8 +23,21 @@ import com.jrj.stroll.complier.dust.lexical.Lexer;
 import com.jrj.stroll.complier.dust.lexical.Token;
 
 /**
- * LL(1)语法分析器
+ * 
  * @author chenn
+ * @LL(1)语法分析器
+ * -- 使用面向组合子的设计模式：这是一个由组合子逻辑（combinatory logic）<br>
+ *    衍生而来的概念，组合子是一种高阶函数，他将接收若干函数作为参数，将其<br>
+ *    组合后返回能够执行复杂语法分析的函数称为解析器组合子。<br>
+ * -- Y-combinator(fixed-point combinator)：用于表述递归计算。<br>
+ * -- Parser 将多个能对简单语法执行语法分析的对象（Parser的内部嵌套类）<br>
+ *    组合之后，获得一个能够对更复杂的语法进行分析的新的对象。<br>
+ * -- Parser 的嵌套子类用于表现 Parser 对象需要处理的语法规则模式。语言<br>
+ *    处理器在将语法规则转换为 Parser 对象时，会调用 number 或 ast 等方<br>
+ *    法来构造模式。这些方法将创建 Parser 中嵌套子类的对象。并将他们添<br>
+ *    加至 Parser 对象的 elemtns 字段指向的 ArrayList 对象中。<br>
+ *    例如，ast 方法会创建一个Tree对象，并将其添加到 ArrayList 中<br>
+ * -- Parser 采用LL下降分析法，部分使用了算符优先分析法
  *
  */
 public class Parser {
@@ -33,6 +46,18 @@ public class Parser {
 	
 	public static final String FACTORY_NAME = "create";
 	
+	protected List<Element> elements;
+	
+	protected Factory factory;
+	
+	/**
+	 * 
+	 * @author chenn
+	 * @执行语法分析的基本组件基类
+	 * -- 它的子类是执行语法分析的基本组件，我们将组合这些对象来实现希望的语法分析<br>
+	 * -- 它的每一个子类都只执行非常简单的分析
+	 *
+	 */
 	protected static abstract class Element{
 		protected abstract void parse(Lexer lexer, List<ASTree> ast) throws ParseException;
 		protected abstract boolean match(Lexer lexer) throws ParseException;
@@ -111,8 +136,9 @@ public class Parser {
 		 * 根据预读匹配，选择正确的产生式分析器，没有返回null
 		 * @param lexer
 		 * @return
+		 * @throws ParseException 
 		 */
-		protected Parser choose(Lexer lexer) {
+		protected Parser choose(Lexer lexer) throws ParseException {
 			for (Parser p : parsers){
 				if (p.match(lexer)){
 					return p;
@@ -171,7 +197,7 @@ public class Parser {
 	/**
 	 * 
 	 * @author chenn
-	 * @Token语法树基类
+	 * @Token语法分析基类
 	 *
 	 */
 	protected static abstract class AToken extends Element{
@@ -201,6 +227,11 @@ public class Parser {
 		protected abstract boolean test(Token t);
 	}
 	
+	/**
+	 * Identifier Token 语法分析器
+	 * @author chenn
+	 *
+	 */
 	protected static class IdToken extends AToken{
 
 		HashSet<String> reserved;
@@ -216,6 +247,11 @@ public class Parser {
 		
 	}
 	
+	/**
+	 * Number Token 语法分析器
+	 * @author chenn
+	 *
+	 */
 	protected static class NumToken extends AToken{
 
 		protected NumToken(Class<? extends ASTreeLeaf> type) {
@@ -229,6 +265,11 @@ public class Parser {
 		
 	}
 	
+	/**
+	 * String Token 语法分析器
+	 * @author chenn
+	 *
+	 */
 	protected static class StrToken extends AToken{
 
 		protected StrToken(Class<? extends ASTreeLeaf> type) {
@@ -242,6 +283,11 @@ public class Parser {
 		
 	}
 	
+	/**
+	 * 不在匹配字符列表中的符号
+	 * @author chenn
+	 *
+	 */
 	protected static class Leaf extends Element{
 		
 		protected String[] tokens;
@@ -286,6 +332,11 @@ public class Parser {
 		
 	}
 	
+	/**
+	 * 不参与分析的符号
+	 * @author chenn
+	 *
+	 */
 	protected static class Skip extends Leaf{
 
 		protected Skip(String[] pat) {
@@ -296,19 +347,29 @@ public class Parser {
 		protected void find(List<ASTree> ast, Token t){}
 	}
 	
+	/**
+	 * 运算符优先级类
+	 * @author chenn
+	 *
+	 */
 	public static class Precedence{
 		
 		int value;
 		/**
 		 * 操作符是否左结合
 		 */
-		boolean leftAssock;		
+		boolean leftAssoc;		
 		public Precedence(int v, boolean a){
 			this.value = v;
-			this.leftAssock = a;
+			this.leftAssoc = a;
 		}
 	}
 	
+	/**
+	 * 运算符表
+	 * @author chenn
+	 *
+	 */
 	public static class Operators extends HashMap<String, Precedence>{
 		
 		/**
@@ -322,35 +383,72 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * 表达式分析器
+	 * @author chenn
+	 *
+	 */
 	protected static class Expr extends Element{
 		
 		protected Factory factory;
 		protected Operators ops;
-		protected Parser parser;
+		protected Parser factor;
 		protected Expr(Class<? extends ASTree> clz, Parser exp, Operators map){
 			factory = Factory.getForASTreeCompound(clz);
 			ops = map;
-			parser = exp;
+			factor = exp;
 		}
 		
 		@Override
 		protected void parse(Lexer lexer, List<ASTree> ast) throws ParseException {
-			// TODO Auto-generated method stub
-			
+			ASTree right = factor.parse(lexer);
+			Precedence prec;
+			while ((prec=nextOperator(lexer)) != null){
+				right = doShift(lexer, right, prec.value);
+			}
+			ast.add(right);
 		}
-		
+
 		@Override
 		protected boolean match(Lexer lexer) throws ParseException {
-			// TODO Auto-generated method stub
-			return false;
+			return factor.match(lexer);
+		}
+		
+		private Precedence nextOperator(Lexer lexer) throws ParseException {
+			Token t = lexer.peek(0);
+			if (t.isIdentifier()){
+				return ops.get(t.getText());
+			}
+			return null;
+		}
+		
+		private ASTree doShift(Lexer lexer, ASTree left, int prec) throws ParseException {
+			ArrayList<ASTree> list = new ArrayList<ASTree>();
+			list.add(left);
+			list.add(new ASTreeLeaf(lexer.read()));
+			ASTree right = factor.parse(lexer);
+			Precedence next;
+			while ((next = nextOperator(lexer)) != null && rightIsExpr(prec, next)){
+				right = doShift(lexer, right, next.value);
+			}
+			list.add(right);
+			return factory.make(list);
+		}
+
+		private boolean rightIsExpr(int prec, Precedence nextPrec) {
+			if (nextPrec.leftAssoc){
+				return prec < nextPrec.value;
+			} else {
+				return prec <= nextPrec.value;
+			}
 		}
 	}
 	
 	/**
 	 * 
 	 * @author chenn
-	 * @分析器工厂<br>
-	 * -- 生产抽象语法树
+	 * @语法树工厂<br>
+	 * -- 生产语法树
 	 *
 	 */
 	protected static abstract class Factory{
@@ -433,72 +531,125 @@ public class Parser {
 		}
 	}
 
+	protected Parser(Parser p){
+		elements = p.elements;
+		factory = p.factory;
+	}
+	
 	public Parser(Class<? extends ASTree> clz) {
-		// TODO Auto-generated constructor stub
+		reset(clz);
 	}
 
-	public ASTree parse(Lexer lexer) {
-		// TODO Auto-generated method stub
-		return null;
+	public ASTree parse(Lexer lexer) throws ParseException {
+		ArrayList<ASTree> results = new ArrayList<>();
+		for (Element e : elements){
+			e.parse(lexer, results);
+		}
+		return factory.make(results);
 	}
 
-	public boolean match(Lexer lexer) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean match(Lexer lexer) throws ParseException {
+		if (elements.size() == 0){
+			return true;
+		} else {
+			Element e = elements.get(0);
+			return e.match(lexer);
+		}
 	}
 	
 	public static Parser rule(){
 		return rule(null);
-	}
-	
+	}	
 	public static Parser rule(Class<? extends ASTree> clz){
 		return new Parser(clz);
 	}
+	
+	public Parser reset(Class<? extends ASTree> clz){
+		elements = new ArrayList<Element>();
+		factory = Factory.getForASTreeCompound(clz);
+		return this;
+	}	
+	public Parser reset(){
+		elements = new ArrayList<>();
+		return this;
+	}
 
-	public Parser sep(String... strings) {
-		// TODO Auto-generated method stub
+	public Parser number(){
+		return number(null);
+	}	
+	public Parser number(Class<? extends ASTreeLeaf> clz) {
+		elements.add(new NumToken(clz));
 		return null;
 	}
 
-	public Parser ast(Parser expr0) {
-		// TODO Auto-generated method stub
-		return null;
+	public Parser identitier(HashSet<String> reserved){
+		return identifier(null,reserved);
+	}
+	public Parser identifier(Class<Identifier> clz, HashSet<String> reserved) {
+		elements.add(new IdToken(clz, reserved));
+		return this;
 	}
 
-	public Parser number(Class<NumberLiteral> class1) {
-		// TODO Auto-generated method stub
-		return null;
+	public Parser string(){
+		return string(null);
+	}
+	public Parser string(Class<StringLiteral> clz) {
+		elements.add(new StrToken(clz));
+		return this;
+	}
+	
+	public Parser token(String... pat){
+		elements.add(new Leaf(pat));
+		return this;
 	}
 
-	public Parser identifier(Class<Identifier> class1, HashSet<String> reserved) {
-		// TODO Auto-generated method stub
-		return null;
+	public Parser sep(String... pat) {
+		elements.add(new Skip(pat));
+		return this;
 	}
 
-	public Parser string(Class<StringLiteral> class1) {
-		// TODO Auto-generated method stub
-		return null;
+	public Parser ast(Parser p) {
+		elements.add(new Tree(p));
+		return this;
 	}
 
 	public Parser or(Parser...parsers) {
-		// TODO Auto-generated method stub
-		return null;
+		elements.add(new OrTree(parsers));
+		return this;
+	}
+	
+	public Parser meybe(Parser p){
+		Parser p2 = new Parser(p);
+		p2.reset();
+		elements.add(new OrTree(new Parser[]{p, p2}));
+		return this;
 	}
 
-	public Parser expression(Class<BinaryExpr> class1, Parser factor, Operators operators) {
-		// TODO Auto-generated method stub
-		return null;
+	public Parser option(Parser p) {
+		elements.add(new Repeat(p, true));
+		return this;
 	}
 
-	public Parser option(Parser statement0) {
-		// TODO Auto-generated method stub
-		return null;
+	public Parser repeat(Parser p) {
+		elements.add(new Repeat(p, false));
+		return this;
 	}
 
-	public Parser repeat(Parser option) {
-		// TODO Auto-generated method stub
-		return null;
+	public Parser expression(Class<? extends ASTree> clz, Parser subexp, Operators operators) {
+		elements.add(new Expr(clz, subexp, operators));
+		return this;
 	}
-
+	
+	public Parser insertChoice(Parser p){
+		Element e = elements.get(0);
+		if (e instanceof OrTree){
+			((OrTree)e).insert(p);
+		} else {
+			Parser otherwise = new Parser(this);
+			reset(null);
+			or(p, otherwise);
+		}
+		return this;
+	}
 	
 }
