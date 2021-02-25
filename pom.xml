@@ -91,5 +91,6 @@
 	
 	<modules>
 		<module>stroll-complier-dust</module>
+		<module>stroll-rpc</module>
 	</modules>
 </project>

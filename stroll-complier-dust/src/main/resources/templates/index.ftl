@@ -5,7 +5,7 @@
 </head>
 <body>
 <div class="wrapper">
-	hello, world
+	hello, 解释器
 </div>
 </body>
 </html>

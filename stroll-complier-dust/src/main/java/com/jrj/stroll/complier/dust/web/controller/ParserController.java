@@ -34,7 +34,7 @@ public class ParserController {
 	@Autowired
 	private LexerRunner lexerRunner;
 	
-	@RequestMapping("/code-dialog")
+	@RequestMapping(value = {"","/code-dialog"})
 	public String codeDialog(HttpServletRequest request, HttpServletResponse response) {
 
 		return "parser/code_dialog";
@@ -58,7 +58,8 @@ public class ParserController {
 				} else {
 					String pret = "";
 					Lexer lexer = lexerRunner.lexer(code);
-					while (lexer.peek(0) != Token.EOF){
+					Token t;
+					while ((t = lexer.peek(0)) != Token.EOF){
 						ASTree ast = basicParser.parse(lexer);
 						pret += ast.toString() + "<br>";
 						System.out.println("=>"+ast.toString());

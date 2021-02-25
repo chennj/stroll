@@ -579,13 +579,13 @@ public class Parser {
 	}	
 	public Parser number(Class<? extends ASTreeLeaf> clz) {
 		elements.add(new NumToken(clz));
-		return null;
+		return this;
 	}
 
 	public Parser identitier(HashSet<String> reserved){
 		return identifier(null,reserved);
 	}
-	public Parser identifier(Class<Identifier> clz, HashSet<String> reserved) {
+	public Parser identifier(Class<? extends ASTreeLeaf> clz, HashSet<String> reserved) {
 		elements.add(new IdToken(clz, reserved));
 		return this;
 	}
@@ -593,7 +593,7 @@ public class Parser {
 	public Parser string(){
 		return string(null);
 	}
-	public Parser string(Class<StringLiteral> clz) {
+	public Parser string(Class<? extends ASTreeLeaf> clz) {
 		elements.add(new StrToken(clz));
 		return this;
 	}
@@ -635,6 +635,10 @@ public class Parser {
 		return this;
 	}
 
+	public Parser expression(Parser subexp, Operators operators) {
+		return expression(null, subexp, operators);
+	}
+	
 	public Parser expression(Class<? extends ASTree> clz, Parser subexp, Operators operators) {
 		elements.add(new Expr(clz, subexp, operators));
 		return this;

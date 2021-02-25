@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>漫步解释器</title>
+    <title>漫步RPC</title>
 </head>
 <body>
 <div class="wrapper">
-	hello, 解释器
+	hello, RPC
 </div>
 </body>
 </html>
