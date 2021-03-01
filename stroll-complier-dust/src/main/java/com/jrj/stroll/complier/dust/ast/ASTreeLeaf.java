@@ -3,6 +3,8 @@ package com.jrj.stroll.complier.dust.ast;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.jrj.stroll.complier.dust.calc.IEnvironment;
+import com.jrj.stroll.complier.dust.exception.DustException;
 import com.jrj.stroll.complier.dust.lexical.Token;
 
 public class ASTreeLeaf extends ASTree{
@@ -45,4 +47,10 @@ public class ASTreeLeaf extends ASTree{
 		return token.getText();
 	}
 
+	@Override
+	public Object eval(IEnvironment env) {
+		throw new DustException("CANNOT EVAL: " + toString(), this);
+	}
+
+	
 }

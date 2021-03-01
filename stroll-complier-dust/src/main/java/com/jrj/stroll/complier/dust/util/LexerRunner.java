@@ -23,8 +23,9 @@ public class LexerRunner {
 		Lexer l = new Lexer(code);
 		for (Token t; (t=l.read()) != Token.EOF;){
 			tokes.add(t.getText());
+			System.out.println("=>"+t.getText());
 		}
-		System.out.println(tokes);
+		
 		return tokes.toString();
 	}
 	

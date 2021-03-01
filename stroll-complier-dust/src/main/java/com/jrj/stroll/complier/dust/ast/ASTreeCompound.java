@@ -3,6 +3,9 @@ package com.jrj.stroll.complier.dust.ast;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jrj.stroll.complier.dust.calc.IEnvironment;
+import com.jrj.stroll.complier.dust.exception.DustException;
+
 public class ASTreeCompound extends ASTree{
 
 	protected List<ASTree> childList;
@@ -49,4 +52,10 @@ public class ASTreeCompound extends ASTree{
 		return null;
 	}
 
+	@Override
+	public Object eval(IEnvironment env) {
+		throw new DustException("CANNOT EVAL: " + toString(), this);
+	}
+
+	
 }

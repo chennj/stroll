@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.jrj.stroll.complier.dust.ast.ASTree;
 import com.jrj.stroll.complier.dust.ast.BinaryExpr;
 import com.jrj.stroll.complier.dust.ast.BlockStmnt;
-import com.jrj.stroll.complier.dust.ast.Identifier;
+import com.jrj.stroll.complier.dust.ast.Name;
 import com.jrj.stroll.complier.dust.ast.IfStmnt;
 import com.jrj.stroll.complier.dust.ast.NegativeExpr;
 import com.jrj.stroll.complier.dust.ast.NullStmnt;
@@ -39,7 +39,7 @@ public class BasicParser {
 			(
 				rule().sep("(").ast(expr0).sep(")"),
 				rule().number(NumberLiteral.class),
-				rule().identifier(Identifier.class, reserved),
+				rule().identifier(Name.class, reserved),
 				rule().string(StringLiteral.class)
 			);
 	Parser factor 		= rule()
@@ -47,6 +47,7 @@ public class BasicParser {
 	Parser expr 		= expr0.expression(BinaryExpr.class, factor, operators);
 	Parser statement0 	= rule();
 	Parser block 		= rule(BlockStmnt.class)
+			.option(rule().sep(Token.EOL))
 			.sep("{")
 			.option(statement0)
 			.repeat(rule().sep(";", Token.EOL).option(statement0))

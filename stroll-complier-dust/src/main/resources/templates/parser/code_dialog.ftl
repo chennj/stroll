@@ -40,7 +40,7 @@
   		border-radius:5px;
 		resize:none;
 	}
-	.content .left>button{
+	.content .left>div{
 		padding: 2px 8px;
 		display:block;
 		margin-top:1%;
@@ -63,13 +63,19 @@
   		border-width: 1px;
   		border-radius:5px;
 	}	
+	.content button{
+		padding: 2px 8px;
+	}
 	</style>
 </head>
 <body>
 <div class="content">
 	<div class="left">
 		<textarea rows="" cols="" id="code" class="textbox"></textarea>
+		<div>
 		<button onclick="parser()">语法分析</button>
+		<button onclick="eval()" style="left:20px;">执行</button>
+		</div>
 	</div>
 	<div class="right">
 		<div id="result" name="result">
@@ -97,9 +103,29 @@ function parser(){
 	    url: "${request.contextPath}/parser/runner",
 	    contentType: "application/json",
 	    data: JSON.stringify(data),
-	    dataType: "json",
+	    dataType: "text",
 	    success: function (data) {
-			$("#result").text(JSON.stringify(data));
+			$("#result").html(data);
+	    },
+	    error: function (e) {
+	    	$("#result").text(JSON.stringify(e.responseJSON));
+	    }
+	});	
+}
+
+function eval(){
+	var code = $("#code").val();
+	var data = {
+		"code": code
+	};
+	$.ajax({
+	    type: "post",
+	    url: "${request.contextPath}/parser/eval",
+	    contentType: "application/json",
+	    data: JSON.stringify(data),
+	    dataType: "text",
+	    success: function (data) {
+			$("#result").html(data);
 	    },
 	    error: function (e) {
 	    	$("#result").text(JSON.stringify(e.responseJSON));

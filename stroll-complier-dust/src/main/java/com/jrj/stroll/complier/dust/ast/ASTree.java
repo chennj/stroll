@@ -2,6 +2,9 @@ package com.jrj.stroll.complier.dust.ast;
 
 import java.util.Iterator;
 
+import com.jrj.stroll.complier.dust.calc.IEnvironment;
+import com.jrj.stroll.complier.dust.calc.IEval;
+
 /**
  * 语法树<br/>
  * -- 抽象基类<br/>
@@ -10,12 +13,14 @@ import java.util.Iterator;
  * @author chenn
  *
  */
-public abstract class ASTree implements Iterable<ASTree>{
+public abstract class ASTree implements Iterable<ASTree>, IEval{
 
 	public abstract ASTree child(int i);
 	public abstract int numChildren();
 	public abstract Iterator<ASTree> childIt();
 	public abstract String location();
+	
+	public abstract Object eval(IEnvironment env);
 	
 	public Iterator<ASTree> iterator(){
 		return childIt();

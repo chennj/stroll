@@ -15,7 +15,7 @@ import com.jrj.stroll.complier.dust.ast.ASTree;
 import com.jrj.stroll.complier.dust.ast.ASTreeCompound;
 import com.jrj.stroll.complier.dust.ast.ASTreeLeaf;
 import com.jrj.stroll.complier.dust.ast.BinaryExpr;
-import com.jrj.stroll.complier.dust.ast.Identifier;
+import com.jrj.stroll.complier.dust.ast.Name;
 import com.jrj.stroll.complier.dust.ast.NumberLiteral;
 import com.jrj.stroll.complier.dust.ast.StringLiteral;
 import com.jrj.stroll.complier.dust.exception.ParseException;

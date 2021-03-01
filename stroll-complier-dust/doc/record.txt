@@ -2,7 +2,7 @@ even = 0
 odd = 0
 i = 1
 while i < 10 {
-	if i % 2 {
+	if i % 2 == 0 {
 		even = even + i
 	} else {
 		odd = odd + i
@@ -11,23 +11,11 @@ while i < 10 {
 }
 even + odd
 
-=>even
-=>()
-=>=
-=>()
-=>0
-=>()
-=>odd
-=>()
-=>=
-=>()
-=>0
-=>()
-=>i
-=>()
-=>=
-=>()
-=>1
-=>()
-
-syntax error around "\n" at line 4. 
+sum = 0
+i = 1
+while i<10
+{
+	sum = sum + if
+	i = i + 1
+}
+sum

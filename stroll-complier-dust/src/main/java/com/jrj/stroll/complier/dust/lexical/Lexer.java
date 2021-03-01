@@ -110,8 +110,8 @@ public class Lexer {
 			} else {
 				throw new ParseException("bad token at line " + lineNo);
 			}
-			queue.add(new IdToken(lineNo, Token.EOL));
 		}
+		queue.add(new IdToken(lineNo, Token.EOL));
 	}
 	
 	protected void addToken(int lineNo, Matcher matcher){
@@ -152,5 +152,74 @@ public class Lexer {
 			sb.append(c);
 		}
 		return sb.toString();
+	}
+	
+	protected static class NumToken extends Token{
+
+		private int value;
+		
+		protected NumToken(int line, int val) {
+			super(line);
+			value = val;
+		}
+
+		@Override
+		public boolean isNumber() {
+			return true;
+		}
+
+		@Override
+		public int getNumber() {
+			return value;
+		}
+
+		@Override
+		public String getText() {
+			return Integer.toString(value);
+		}
+		
+	}
+
+	protected static class IdToken extends Token{
+
+		private String text;
+		
+		protected IdToken(int line, String id) {
+			super(line);
+			text = id;
+		}
+
+		@Override
+		public boolean isIdentifier() {
+			return true;
+		}
+
+		@Override
+		public String getText() {
+			return text;
+		}
+		
+	}
+	
+	protected static class StrToken extends Token{
+
+		private String literal;
+		
+		protected StrToken(int line, String str) {
+			super(line);
+			literal = str;
+		}
+
+		@Override
+		public boolean isString() {
+			return true;
+		}
+
+		@Override
+		public String getText() {
+			return literal;
+		}
+
+		
 	}
 }

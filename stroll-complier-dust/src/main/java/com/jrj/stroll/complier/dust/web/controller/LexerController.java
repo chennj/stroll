@@ -27,7 +27,7 @@ public class LexerController {
 	@Autowired
 	private LexerRunner lexerRunner;
 	
-	@RequestMapping("/code-dialog")
+	@RequestMapping(value={"","/code-dialog"})
 	public String codeDialog(HttpServletRequest request, HttpServletResponse response) {
 
 		return "lexical/code_dialog";
