@@ -50,22 +50,31 @@ package com.jrj.stroll.complier.dust.ast;
 
 /**
  * dust 语言的语法定义
- * -- primary 		: "(" expr ")" | NUMBER | IDENTIFIER | STRING
- * 					表示括号括起的表达式、整形字面量、标识符（变量名）、字符串字面量
+ * -- param			: IDENTIFIER
+ * 					形参
+ * -- params		: param {"," param}
+ * -- param_list	: "(" [ params ] ")"
+ * -- def			: "def" IDENTIFIER param_list block
+ * 					函数
  * -- factor 		: primary | "-" primary
  * 					表示一个 primary 或 再添加一个 ”减号“的组合
  * -- expr 			: factor { OP factor }
+ * -- args			: expr {"," expr}
+ * 					实参
+ * -- postfix		: "(" [ args ] ")"
+ * -- primary 		: ( "(" expr ")" | NUMBER | IDENTIFIER | STRING ) { postfix }
+ * 					表示括号括起的表达式、整形字面量、标识符（变量名）、字符串字面量
  * 					表示两个 factor 之间夹有一个双目运算符的组合
  * -- block 		: "{" [ statement ] { (";" | EOL) [ statement ] } "}"
  * 					表示由{}括起来的 statement（语句）序列，statement 之间需要用分号或者换行符 EOL 分割，
  * 					因为 dust 语言支持空语句，因此规则中的 statement 两侧写有中括号 [] 
- * -- simple 		: expr
+ * -- simple 		: expr [ args ]
  * 					表示简单表达式语句
  * -- statement 	: "if" expr block [ "else" block ]
  * 					| "while" expr block
  * 					| simple
  * 					语句的组成规则：if、while、simple
- * -- program 		: [ statement ] (";" | EOL)
+ * -- program 		: [ def | statement ] (";" | EOL)
  * 					程序的组成：语句加“;”或则换行符，也可以是空语句
  */
 

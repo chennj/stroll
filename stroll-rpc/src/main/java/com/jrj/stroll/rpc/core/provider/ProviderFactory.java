@@ -216,7 +216,7 @@ public class ProviderFactory {
 			rpcResponse.setResult(result);
 		} catch (Throwable t) {
 			// catch error
-			logger.error("xxl-rpc provider invokeService error.", t);
+			logger.error("rpc provider invokeService error.", t);
 			rpcResponse.setErrorMsg(ThrowableUtil.toString(t));
 		}
 

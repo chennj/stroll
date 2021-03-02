@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +13,6 @@ import org.slf4j.LoggerFactory;
 import com.jrj.stroll.complier.dust.ast.ASTree;
 import com.jrj.stroll.complier.dust.ast.ASTreeCompound;
 import com.jrj.stroll.complier.dust.ast.ASTreeLeaf;
-import com.jrj.stroll.complier.dust.ast.BinaryExpr;
-import com.jrj.stroll.complier.dust.ast.Name;
-import com.jrj.stroll.complier.dust.ast.NumberLiteral;
-import com.jrj.stroll.complier.dust.ast.StringLiteral;
 import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
 import com.jrj.stroll.complier.dust.lexical.Token;
@@ -582,7 +577,7 @@ public class Parser {
 		return this;
 	}
 
-	public Parser identitier(HashSet<String> reserved){
+	public Parser identifier(HashSet<String> reserved){
 		return identifier(null,reserved);
 	}
 	public Parser identifier(Class<? extends ASTreeLeaf> clz, HashSet<String> reserved) {
@@ -618,7 +613,7 @@ public class Parser {
 		return this;
 	}
 	
-	public Parser meybe(Parser p){
+	public Parser maybe(Parser p){
 		Parser p2 = new Parser(p);
 		p2.reset();
 		elements.add(new OrTree(new Parser[]{p, p2}));

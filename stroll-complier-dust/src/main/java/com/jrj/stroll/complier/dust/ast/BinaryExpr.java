@@ -85,6 +85,10 @@ public class BinaryExpr extends ASTreeCompound{
 			return a > b ? TRUE : FALSE;
 		case "<":
 			return a < b ? TRUE : FALSE;
+		case "&&":
+			return (a == TRUE && b == TRUE) ? TRUE : FALSE;
+		case "||":
+			return (a == TRUE || b == TRUE) ? TRUE : FALSE;
 		default:
 			throw new DustException("bad operator",this);
 		}

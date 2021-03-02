@@ -72,7 +72,7 @@ public class NettyServer extends AServer {
 					// bind
 					ChannelFuture future = bootstrap.bind(providerFactory.getPort()).sync();
 
-                    logger.info(">>>>>>>>>>> xxl-rpc remoting server start success, nettype = {}, port = {}", NettyServer.class.getName(), providerFactory.getPort());
+                    logger.info(">>>>>>>>>>> rpc remoting server start success, nettype = {}, port = {}", NettyServer.class.getName(), providerFactory.getPort());
 					onStarted();
 
 					// wait util stop
@@ -80,9 +80,9 @@ public class NettyServer extends AServer {
 
 				} catch (Exception e) {
 					if (e instanceof InterruptedException) {
-						logger.info(">>>>>>>>>>> xxl-rpc remoting server stop.");
+						logger.info(">>>>>>>>>>> rpc remoting server stop.");
 					} else {
-						logger.error(">>>>>>>>>>> xxl-rpc remoting server error.", e);
+						logger.error(">>>>>>>>>>> rpc remoting server error.", e);
 					}
 				} finally {
 

@@ -71,15 +71,17 @@ public class BasicParser {
 		reserved.add("}");
 		reserved.add(Token.EOL);
 		
-		operators.add("=", 1, Operators.RIGHT);
+		operators.add("=", 	1, Operators.RIGHT);
+		operators.add("&&", 1, Operators.LEFT);
+		operators.add("||", 1, Operators.LEFT);
 		operators.add("==", 2, Operators.LEFT);
-		operators.add(">", 2, Operators.LEFT);
-		operators.add("<", 2, Operators.LEFT);
-		operators.add("+", 3, Operators.LEFT);
-		operators.add("-", 3, Operators.LEFT);
-		operators.add("*", 4, Operators.LEFT);
-		operators.add("/", 4, Operators.LEFT);
-		operators.add("%", 4, Operators.LEFT);
+		operators.add(">", 	2, Operators.LEFT);
+		operators.add("<", 	2, Operators.LEFT);
+		operators.add("+", 	3, Operators.LEFT);
+		operators.add("-", 	3, Operators.LEFT);
+		operators.add("*", 	4, Operators.LEFT);
+		operators.add("/", 	4, Operators.LEFT);
+		operators.add("%", 	4, Operators.LEFT);
 	}
 	
 	public ASTree parse(Lexer lexer) throws ParseException{
