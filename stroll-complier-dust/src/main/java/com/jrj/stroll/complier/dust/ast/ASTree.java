@@ -22,6 +22,7 @@ public abstract class ASTree implements Iterable<ASTree>, IEval{
 	
 	public abstract Object eval(IEnvironment env);
 	
+	@Override
 	public Iterator<ASTree> iterator(){
 		return childIt();
 	}

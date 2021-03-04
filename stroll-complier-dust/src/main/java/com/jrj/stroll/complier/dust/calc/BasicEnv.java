@@ -23,5 +23,11 @@ public class BasicEnv implements IEnvironment{
 	public Object get(String name) {
 		return values.get(name);
 	}
+	
+	@Override
+	public IEnvironment where(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

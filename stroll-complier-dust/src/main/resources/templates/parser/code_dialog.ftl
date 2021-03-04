@@ -73,8 +73,10 @@
 	<div class="left">
 		<textarea rows="" cols="" id="code" class="textbox"></textarea>
 		<div>
-		<button onclick="parser()">语法分析</button>
+		<button onclick="parse()">语法分析</button>
 		<button onclick="eval()" style="left:20px;">执行</button>
+		<button onclick="parse_f()">语法分析(F)</button>
+		<button onclick="eval_f()" style="left:20px;">执行(F)</button>
 		</div>
 	</div>
 	<div class="right">
@@ -93,14 +95,14 @@ $(document).ready(function(){
 	$(".content").css({"height":window_height,"width":window_width});
 });
 
-function parser(){
+function parse(){
 	var code = $("#code").val();
 	var data = {
 		"code": code
 	};
 	$.ajax({
 	    type: "post",
-	    url: "${request.contextPath}/parser/runner",
+	    url: "${request.contextPath}/parser/parse",
 	    contentType: "application/json",
 	    data: JSON.stringify(data),
 	    dataType: "text",
@@ -121,6 +123,46 @@ function eval(){
 	$.ajax({
 	    type: "post",
 	    url: "${request.contextPath}/parser/eval",
+	    contentType: "application/json",
+	    data: JSON.stringify(data),
+	    dataType: "text",
+	    success: function (data) {
+			$("#result").html(data);
+	    },
+	    error: function (e) {
+	    	$("#result").text(JSON.stringify(e.responseJSON));
+	    }
+	});	
+}
+
+function parse_f(){
+	var code = $("#code").val();
+	var data = {
+		"code": code
+	};
+	$.ajax({
+	    type: "post",
+	    url: "${request.contextPath}/parser/parse_f",
+	    contentType: "application/json",
+	    data: JSON.stringify(data),
+	    dataType: "text",
+	    success: function (data) {
+			$("#result").html(data);
+	    },
+	    error: function (e) {
+	    	$("#result").text(JSON.stringify(e.responseJSON));
+	    }
+	});	
+}
+
+function eval_f(){
+	var code = $("#code").val();
+	var data = {
+		"code": code
+	};
+	$.ajax({
+	    type: "post",
+	    url: "${request.contextPath}/parser/eval_f",
 	    contentType: "application/json",
 	    data: JSON.stringify(data),
 	    dataType: "text",

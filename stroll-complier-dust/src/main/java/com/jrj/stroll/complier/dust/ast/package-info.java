@@ -56,13 +56,14 @@ package com.jrj.stroll.complier.dust.ast;
  * -- param_list	: "(" [ params ] ")"
  * -- def			: "def" IDENTIFIER param_list block
  * 					函数
+ * -- primary 		: ( "(" expr ")" | NUMBER | IDENTIFIER | STRING ) { postfix }
+ * 					| " fun " param_list block #闭包
  * -- factor 		: primary | "-" primary
  * 					表示一个 primary 或 再添加一个 ”减号“的组合
  * -- expr 			: factor { OP factor }
  * -- args			: expr {"," expr}
  * 					实参
  * -- postfix		: "(" [ args ] ")"
- * -- primary 		: ( "(" expr ")" | NUMBER | IDENTIFIER | STRING ) { postfix }
  * 					表示括号括起的表达式、整形字面量、标识符（变量名）、字符串字面量
  * 					表示两个 factor 之间夹有一个双目运算符的组合
  * -- block 		: "{" [ statement ] { (";" | EOL) [ statement ] } "}"

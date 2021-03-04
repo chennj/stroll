@@ -21,3 +21,29 @@ while i<10
 sum
 
 [\u0001-\u0010]
+
+def fact(n)
+{
+	f=1
+	while n>0
+	{
+		f = f*n
+		n = n-1
+	}
+	f
+}
+
+def fib(n)
+{
+	if n<2 {
+		n
+	} else {
+		fib(n-1)+fib(n-2)
+	}
+}
+fib(10)
+
+x=1
+def foo(y) {x}
+def bar(x) {foo(x+1)}
+bar(3)
