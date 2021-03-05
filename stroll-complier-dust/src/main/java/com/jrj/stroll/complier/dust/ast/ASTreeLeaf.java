@@ -48,7 +48,7 @@ public class ASTreeLeaf extends ASTree{
 	}
 
 	@Override
-	public Object eval(IEnvironment env) {
+	public Object eval(IEnvironment env) throws DustException{
 		throw new DustException("CANNOT EVAL: " + toString(), this);
 	}
 

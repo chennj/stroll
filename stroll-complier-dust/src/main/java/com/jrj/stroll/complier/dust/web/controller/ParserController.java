@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jrj.stroll.complier.dust.ast.ASTree;
 import com.jrj.stroll.complier.dust.calc.BasicEvaluator;
+import com.jrj.stroll.complier.dust.calc.ChnEvaluator;
 import com.jrj.stroll.complier.dust.calc.FuncEvaluator;
+import com.jrj.stroll.complier.dust.exception.DustException;
 import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
 import com.jrj.stroll.complier.dust.lexical.Token;
@@ -46,19 +48,56 @@ public class ParserController {
 	@Autowired
 	private FuncEvaluator funcEvaluator;
 	
+	@Autowired
+	private ChnEvaluator chnEvaluator;
+	
 	@RequestMapping(value = {"","/code-dialog"})
 	public String codeDialog(HttpServletRequest request, HttpServletResponse response) {
 
 		return "parser/code_dialog";
 	}
 	
-	// ------------------------ basic -----------------------------------------------
+	// ------------------------ lexical ---------------------------------------------
+	@ResponseBody
+	@RequestMapping(value = "/lexer",method = RequestMethod.POST)
+	public String runner(@RequestBody Map<String,Object> payload) {
+
+		logger.info("\nenter lexer");
+		
+		String result="";
+		
+		if (null == payload || payload.size() == 0){
+			result = "no json";
+		} else {
+			try {
+				String code = payload.get("code").toString();
+				if (null == code || code.trim().length() == 0){
+					result = "no code in the json";
+				} else {
+					logger.info("\nprogram code ---- \n"+code);
+					ArrayList<String> rets = new ArrayList<>();
+					lexerRunner.run(payload.get("code").toString(), rets);
+					for (String s : rets){
+						result += s + "<br>";
+					}
+				}
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				result = e.getMessage();
+			}
+		}
+				
+		return result;
+	}
+	
+	// ------------------------ syntax basic -----------------------------------------------
 	
 	@ResponseBody
 	@RequestMapping(value = "/parse",method = RequestMethod.POST)
 	public String parse(@RequestBody Map<String,Object> payload) {
 
-		logger.info("\nenter parse -- data:\n"+payload);
+		logger.info("\nenter parse");
 		
 		String result;
 		
@@ -70,6 +109,7 @@ public class ParserController {
 				if (null == code || code.trim().length() == 0){
 					result = "no code in the json";
 				} else {
+					logger.info("\nprogram code ---- \n"+code);
 					String pret = "";
 					Lexer lexer = lexerRunner.lexer(code);
 					Token t;
@@ -80,10 +120,12 @@ public class ParserController {
 					}
 					result = pret;
 				}
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+			} catch (DustException e) {
 				e.printStackTrace();
 				result = e.getMessage();
+			} catch (ParseException e1){
+				e1.printStackTrace();
+				result = e1.getMessage();
 			}
 		}
 				
@@ -94,7 +136,7 @@ public class ParserController {
 	@RequestMapping(value = "/eval",method = RequestMethod.POST)
 	public String eval(@RequestBody Map<String,Object> payload){
 		
-		logger.info("\nenter eval -- data:\n"+payload);
+		logger.info("\nenter eval");
 		
 		String result="";
 		
@@ -106,28 +148,31 @@ public class ParserController {
 				if (null == code || code.trim().length() == 0){
 					result = "no code in the json";
 				} else {
+					logger.info("\nprogram code ---- \n"+code);
 					ArrayList<String> rets = new ArrayList<>();
 					basicEvaluator.run(code, rets);
 					for (String s : rets){
 						result += s + "<br>";
 					}
 				}
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+			} catch (DustException e) {
 				e.printStackTrace();
 				result = e.getMessage();
+			} catch (ParseException e1){
+				e1.printStackTrace();
+				result = e1.getMessage();
 			}
 		}
 				
 		return result;
 	}
 	
-	// ------------------------- function -------------------------------
+	// ------------------------- syntax added function -------------------------------
 	@ResponseBody
 	@RequestMapping(value = "/parse_f",method = RequestMethod.POST)
 	public String parsef(@RequestBody Map<String,Object> payload) {
 
-		logger.info("\nenter parsef -- data:\n"+payload);
+		logger.info("\nenter parsef ");
 		
 		String result;
 		
@@ -139,6 +184,7 @@ public class ParserController {
 				if (null == code || code.trim().length() == 0){
 					result = "no code in the json";
 				} else {
+					logger.info("\nprogram code ---- \n"+code);
 					String pret = "";
 					Lexer lexer = lexerRunner.lexer(code);
 					Token t;
@@ -149,10 +195,12 @@ public class ParserController {
 					}
 					result = pret;
 				}
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+			} catch (DustException e) {
 				e.printStackTrace();
 				result = e.getMessage();
+			} catch (ParseException e1){
+				e1.printStackTrace();
+				result = e1.getMessage();
 			}
 		}
 				
@@ -163,7 +211,7 @@ public class ParserController {
 	@RequestMapping(value = "/eval_f",method = RequestMethod.POST)
 	public String evalf(@RequestBody Map<String,Object> payload){
 		
-		logger.info("\nenter evalf -- data:\n"+payload);
+		logger.info("\nenter evalf");
 		
 		String result="";
 		
@@ -175,16 +223,55 @@ public class ParserController {
 				if (null == code || code.trim().length() == 0){
 					result = "no code in the json";
 				} else {
+					logger.info("\nprogram code ---- \n"+code);
 					ArrayList<String> rets = new ArrayList<>();
 					funcEvaluator.run(code, rets);
 					for (String s : rets){
 						result += s + "<br>";
 					}
 				}
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+			} catch (DustException e) {
 				e.printStackTrace();
 				result = e.getMessage();
+			} catch (ParseException e1){
+				e1.printStackTrace();
+				result = e1.getMessage();
+			}
+		}
+				
+		return result;
+	}
+	
+	// ------------------------- syntax added chinese -------------------------------
+	@ResponseBody
+	@RequestMapping(value = "/eval_ch",method = RequestMethod.POST)
+	public String evalch(@RequestBody Map<String,Object> payload){
+		
+		logger.info("\nenter evalch");
+		
+		String result="";
+		
+		if (null == payload || payload.size() == 0){
+			result = "no json";
+		} else {
+			try {
+				String code = payload.get("code").toString();
+				if (null == code || code.trim().length() == 0){
+					result = "no code in the json";
+				} else {
+					logger.info("\nprogram code ---- \n"+code);
+					ArrayList<String> rets = new ArrayList<>();
+					chnEvaluator.run(code, rets);
+					for (String s : rets){
+						result += s + "<br>";
+					}
+				}
+			} catch (DustException e) {
+				e.printStackTrace();
+				result = e.getMessage();
+			} catch (ParseException e1){
+				e1.printStackTrace();
+				result = e1.getMessage();
 			}
 		}
 				

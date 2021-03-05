@@ -27,7 +27,7 @@ public class BinaryExpr extends ASTreeCompound{
 	@Override
 	public Object eval(IEnvironment env) {
 		String op = operator();
-		if ("=".equals(op)){
+		if ("=".equals(op) || "取值".equals(op)){
 			Object right = right().eval(env);
 			return computeAssign(env,right);
 		} else {
@@ -51,7 +51,7 @@ public class BinaryExpr extends ASTreeCompound{
 		if (left instanceof Integer && right instanceof Integer){
 			return computeNumber((Integer)left, op, (Integer)right);
 		} else {
-			if (op.equals("+")){
+			if (op.equals("+") || op.equals("加")){
 				return String.valueOf(left) + String.valueOf(right);
 			} else if (op.equals("==")){
 				if (null == left){
@@ -70,24 +70,40 @@ public class BinaryExpr extends ASTreeCompound{
 		int b = right.intValue();
 		switch (op){
 		case "+":
+		case "加":
 			return a + b;
 		case "-":
+		case "减":
 			return a - b;
 		case "*":
+		case "乘":
 			return a * b;
 		case "/":
+		case "除":
 			return a / b;
 		case "%":
+		case "模":
 			return a % b;
 		case "==":
+		case "等于":
 			return a == b ? TRUE : FALSE;
 		case ">":
+		case "大于":
 			return a > b ? TRUE : FALSE;
+		case ">=":
+		case "大于或等于":
+			return a >= b ? TRUE : FALSE;
 		case "<":
+		case "小于":
 			return a < b ? TRUE : FALSE;
+		case "<=":
+		case "小于或等于":
+			return a <= b ? TRUE : FALSE;
 		case "&&":
+		case "并且":
 			return (a == TRUE && b == TRUE) ? TRUE : FALSE;
 		case "||":
+		case "或者":
 			return (a == TRUE || b == TRUE) ? TRUE : FALSE;
 		default:
 			throw new DustException("bad operator",this);

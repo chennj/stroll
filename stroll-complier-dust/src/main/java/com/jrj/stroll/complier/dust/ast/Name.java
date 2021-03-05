@@ -15,7 +15,7 @@ public class Name extends ASTreeLeaf{
 	}
 
 	@Override
-	public Object eval(IEnvironment env) {
+	public Object eval(IEnvironment env) throws DustException{
 		Object value = env.get(name());
 		if (null == value){
 			throw new DustException("undefined name:" + name(), this);

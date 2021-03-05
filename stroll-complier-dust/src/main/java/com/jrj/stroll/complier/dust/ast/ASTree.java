@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.jrj.stroll.complier.dust.calc.IEnvironment;
 import com.jrj.stroll.complier.dust.calc.IEval;
+import com.jrj.stroll.complier.dust.exception.DustException;
 
 /**
  * 语法树<br/>
@@ -20,7 +21,8 @@ public abstract class ASTree implements Iterable<ASTree>, IEval{
 	public abstract Iterator<ASTree> childIt();
 	public abstract String location();
 	
-	public abstract Object eval(IEnvironment env);
+	@Override
+	public abstract Object eval(IEnvironment env) throws DustException;
 	
 	@Override
 	public Iterator<ASTree> iterator(){

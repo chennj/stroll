@@ -62,6 +62,7 @@
 		border-style: solid;
   		border-width: 1px;
   		border-radius:5px;
+  		overflow: auto;
 	}	
 	.content button{
 		padding: 2px 8px;
@@ -73,10 +74,14 @@
 	<div class="left">
 		<textarea rows="" cols="" id="code" class="textbox"></textarea>
 		<div>
+		<button onclick="lexer()">词法分析</button>
+		<!-- 不支持函数调用
 		<button onclick="parse()">语法分析</button>
 		<button onclick="eval()" style="left:20px;">执行</button>
-		<button onclick="parse_f()">语法分析(F)</button>
-		<button onclick="eval_f()" style="left:20px;">执行(F)</button>
+		-->
+		<button onclick="parse_f()">语法分析(EN)</button>
+		<button onclick="eval_f()" style="left:20px;">执行(EN)</button>
+		<button onclick="eval_ch()" style="left:20px;">执行(CH)</button>
 		</div>
 	</div>
 	<div class="right">
@@ -94,6 +99,26 @@ $(document).ready(function(){
 	window_width = $(window).innerWidth()-30;
 	$(".content").css({"height":window_height,"width":window_width});
 });
+
+function lexer(){
+	var code = $("#code").val();
+	var data = {
+		"code": code
+	};
+	$.ajax({
+	    type: "post",
+	    url: "${request.contextPath}/parser/lexer",
+	    contentType: "application/json",
+	    data: JSON.stringify(data),
+	    dataType: "text",
+	    success: function (data) {
+			$("#result").html(data);
+	    },
+	    error: function (e) {
+	    	$("#result").text(JSON.stringify(e.responseJSON));
+	    }
+	});	
+}
 
 function parse(){
 	var code = $("#code").val();
@@ -163,6 +188,26 @@ function eval_f(){
 	$.ajax({
 	    type: "post",
 	    url: "${request.contextPath}/parser/eval_f",
+	    contentType: "application/json",
+	    data: JSON.stringify(data),
+	    dataType: "text",
+	    success: function (data) {
+			$("#result").html(data);
+	    },
+	    error: function (e) {
+	    	$("#result").text(JSON.stringify(e.responseJSON));
+	    }
+	});	
+}
+
+function eval_ch(){
+	var code = $("#code").val();
+	var data = {
+		"code": code
+	};
+	$.ajax({
+	    type: "post",
+	    url: "${request.contextPath}/parser/eval_ch",
 	    contentType: "application/json",
 	    data: JSON.stringify(data),
 	    dataType: "text",

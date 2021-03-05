@@ -6,29 +6,24 @@ import org.springframework.stereotype.Component;
 
 import com.jrj.stroll.complier.dust.ast.ASTree;
 import com.jrj.stroll.complier.dust.ast.NullStmnt;
-import com.jrj.stroll.complier.dust.exception.DustException;
 import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
 import com.jrj.stroll.complier.dust.lexical.Token;
-import com.jrj.stroll.complier.dust.parser.FuncParser;
+import com.jrj.stroll.complier.dust.parser.ChnParser;
 
-/**
- * 
- * @author chenn
- *
- */
 @Component
-public class FuncEvaluator extends BasicEvaluator{
+public class ChnEvaluator extends BasicEvaluator{
+
+	public static final int TRUE = 1;
+	public static final int FALSE = 0;
 	
-	@Override
-	public void run(String code, List<String> result) throws DustException, ParseException{
+	public void run(String code, List<String> result) throws ParseException{
 		
-		FuncParser p = new FuncParser();
+		ChnParser p = new ChnParser();
 		IEnvironment env = new NestedEnv();
 		
 		Lexer lexer = new Lexer(code);
-		Token tmp;
-		while ((tmp = lexer.peek(0)) != Token.EOF){
+		while (lexer.peek(0) != Token.EOF){
 			ASTree t = p.parse(lexer);
 			if (!(t instanceof NullStmnt)){
 				Object r = t.eval(env);

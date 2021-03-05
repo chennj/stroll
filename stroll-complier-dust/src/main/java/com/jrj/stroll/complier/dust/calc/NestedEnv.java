@@ -39,7 +39,7 @@ public class NestedEnv implements IEnvironment{
 		if (e == null){
 			e = this;
 		}
-		e.put(name, value);
+		((NestedEnv)e).putNew(name, value);
 	}
 
 	@Override
