@@ -56,6 +56,8 @@ package com.jrj.stroll.complier.dust.ast;
  * -- param_list	: "(" [ params ] ")"
  * -- def			: "def" IDENTIFIER param_list block
  * 					函数
+ * -- caseof		: "caseof" expr block
+ * -- caseofblock	: "{" caseof { (";" | EOL) [ caseof ] } "}"
  * -- primary 		: ( "(" expr ")" | NUMBER | IDENTIFIER | STRING ) { postfix }
  * 					| " fun " param_list block #闭包
  * -- factor 		: primary | "-" primary
@@ -73,6 +75,7 @@ package com.jrj.stroll.complier.dust.ast;
  * 					表示简单表达式语句
  * -- statement 	: "if" expr block [ "else" block ]
  * 					| "while" expr block
+ * 					| "switch" expr caseofblock
  * 					| simple
  * 					语句的组成规则：if、while、simple
  * -- program 		: [ def | statement ] (";" | EOL)
