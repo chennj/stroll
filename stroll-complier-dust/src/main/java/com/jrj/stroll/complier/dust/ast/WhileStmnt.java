@@ -20,11 +20,6 @@ public class WhileStmnt extends ASTreeCompound{
 	}
 	
 	@Override
-	public String toString(){
-		return "(while " + condition() + " " + body() + ")";
-	}
-
-	@Override
 	public Object eval(IEnvironment env) {
 		Object result = 0;
 		for (;;){
@@ -37,5 +32,9 @@ public class WhileStmnt extends ASTreeCompound{
 		}
 	}
 	
+	@Override
+	public String toString(){
+		return "(while " + condition() + " " + body() + ")";
+	}
 	
 }

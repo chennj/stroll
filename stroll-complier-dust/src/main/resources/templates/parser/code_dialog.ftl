@@ -81,6 +81,7 @@
 		-->
 		<button onclick="parse_f()">语法分析(EN)</button>
 		<button onclick="eval_f()" style="left:20px;">执行(EN)</button>
+		<button onclick="parse_ch()">语法分析(CH)</button>
 		<button onclick="eval_ch()" style="left:20px;">执行(CH)</button>
 		</div>
 	</div>
@@ -188,6 +189,26 @@ function eval_f(){
 	$.ajax({
 	    type: "post",
 	    url: "${request.contextPath}/parser/eval_f",
+	    contentType: "application/json",
+	    data: JSON.stringify(data),
+	    dataType: "text",
+	    success: function (data) {
+			$("#result").html(data);
+	    },
+	    error: function (e) {
+	    	$("#result").text(JSON.stringify(e.responseJSON));
+	    }
+	});	
+}
+
+function parse_ch(){
+	var code = $("#code").val();
+	var data = {
+		"code": code
+	};
+	$.ajax({
+	    type: "post",
+	    url: "${request.contextPath}/parser/parse_ch",
 	    contentType: "application/json",
 	    data: JSON.stringify(data),
 	    dataType: "text",

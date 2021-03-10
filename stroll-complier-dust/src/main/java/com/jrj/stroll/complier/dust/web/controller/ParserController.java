@@ -24,6 +24,7 @@ import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
 import com.jrj.stroll.complier.dust.lexical.Token;
 import com.jrj.stroll.complier.dust.parser.BasicParser;
+import com.jrj.stroll.complier.dust.parser.ChnParser;
 import com.jrj.stroll.complier.dust.parser.FuncParser;
 import com.jrj.stroll.complier.dust.util.LexerRunner;
 
@@ -47,6 +48,9 @@ public class ParserController {
 	
 	@Autowired
 	private FuncEvaluator funcEvaluator;
+	
+	@Autowired
+	private ChnParser chnParser;
 	
 	@Autowired
 	private ChnEvaluator chnEvaluator;
@@ -243,6 +247,46 @@ public class ParserController {
 	}
 	
 	// ------------------------- syntax added chinese -------------------------------
+	
+	@ResponseBody
+	@RequestMapping(value = "/parse_ch",method = RequestMethod.POST)
+	public String parsech(@RequestBody Map<String,Object> payload) {
+
+		logger.info("\nenter parsef ");
+		
+		String result;
+		
+		if (null == payload || payload.size() == 0){
+			result = "no json";
+		} else {
+			try {
+				String code = payload.get("code").toString();
+				if (null == code || code.trim().length() == 0){
+					result = "no code in the json";
+				} else {
+					logger.info("\nprogram code ---- \n"+code);
+					String pret = "";
+					Lexer lexer = lexerRunner.lexer(code);
+					Token t;
+					while ((t = lexer.peek(0)) != Token.EOF){
+						ASTree ast = chnParser.parse(lexer);
+						pret += "=>" + ast.toString() + "<br/>";
+						System.out.println("=>"+ast.toString());
+					}
+					result = pret;
+				}
+			} catch (DustException e) {
+				e.printStackTrace();
+				result = e.getMessage();
+			} catch (ParseException e1){
+				e1.printStackTrace();
+				result = e1.getMessage();
+			}
+		}
+				
+		return result;
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "/eval_ch",method = RequestMethod.POST)
 	public String evalch(@RequestBody Map<String,Object> payload){

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import com.jrj.stroll.complier.dust.ast.ASTree;
 import com.jrj.stroll.complier.dust.ast.BinaryExpr;
 import com.jrj.stroll.complier.dust.ast.BlockStmnt;
+import com.jrj.stroll.complier.dust.ast.CaseOf;
+import com.jrj.stroll.complier.dust.ast.CaseOfBlock;
 import com.jrj.stroll.complier.dust.ast.Name;
 import com.jrj.stroll.complier.dust.ast.IfStmnt;
 import com.jrj.stroll.complier.dust.ast.NegativeExpr;
@@ -14,6 +16,7 @@ import com.jrj.stroll.complier.dust.ast.NullStmnt;
 import com.jrj.stroll.complier.dust.ast.NumberLiteral;
 import com.jrj.stroll.complier.dust.ast.PrimaryExpr;
 import com.jrj.stroll.complier.dust.ast.StringLiteral;
+import com.jrj.stroll.complier.dust.ast.SwitchStmnt;
 import com.jrj.stroll.complier.dust.ast.WhileStmnt;
 import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
@@ -53,11 +56,29 @@ public class BasicParser {
 			.repeat(rule().sep(";", Token.EOL).option(statement0))
 			.sep("}");
 	Parser simple 		= rule(PrimaryExpr.class).ast(expr);
+	Parser caseof		= rule(CaseOf.class)
+			.sep("caseof")
+			.or
+			(
+				rule().number(NumberLiteral.class),
+				rule().identifier(Name.class, reserved),
+				rule().string(StringLiteral.class)
+			)
+			.option(rule().sep(Token.EOL))
+			.ast(block);
+	Parser caseofblock = rule(CaseOfBlock.class)
+			.option(rule().sep(Token.EOL))
+			.sep("{")
+			.option(rule().sep(Token.EOL))
+			.ast(caseof)
+			.repeat(rule().sep(";", Token.EOL).option(caseof))
+			.sep("}");
 	Parser statement 	= statement0
 			.or
 			(
 				rule(IfStmnt.class).sep("if").ast(expr).ast(block).option(rule().sep("else").ast(block)),
 				rule(WhileStmnt.class).sep("while").ast(expr).ast(block),
+				rule(SwitchStmnt.class).sep("switch").ast(expr).option(rule().sep(Token.EOL)).ast(caseofblock),
 				simple
 			);
 	Parser program 		= rule()

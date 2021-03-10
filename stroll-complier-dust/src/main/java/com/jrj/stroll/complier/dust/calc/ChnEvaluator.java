@@ -13,9 +13,6 @@ import com.jrj.stroll.complier.dust.parser.ChnParser;
 
 @Component
 public class ChnEvaluator extends BasicEvaluator{
-
-	public static final int TRUE = 1;
-	public static final int FALSE = 0;
 	
 	public void run(String code, List<String> result) throws ParseException{
 		

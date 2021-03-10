@@ -8,6 +8,8 @@ import com.jrj.stroll.complier.dust.ast.ASTree;
 import com.jrj.stroll.complier.dust.ast.Arguments;
 import com.jrj.stroll.complier.dust.ast.BinaryExpr;
 import com.jrj.stroll.complier.dust.ast.BlockStmnt;
+import com.jrj.stroll.complier.dust.ast.CaseOf;
+import com.jrj.stroll.complier.dust.ast.CaseOfBlock;
 import com.jrj.stroll.complier.dust.ast.DefStmnt;
 import com.jrj.stroll.complier.dust.ast.Name;
 import com.jrj.stroll.complier.dust.ast.IfStmnt;
@@ -17,6 +19,7 @@ import com.jrj.stroll.complier.dust.ast.NumberLiteral;
 import com.jrj.stroll.complier.dust.ast.ParameterList;
 import com.jrj.stroll.complier.dust.ast.PrimaryExpr;
 import com.jrj.stroll.complier.dust.ast.StringLiteral;
+import com.jrj.stroll.complier.dust.ast.SwitchStmnt;
 import com.jrj.stroll.complier.dust.ast.WhileStmnt;
 import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
@@ -58,12 +61,30 @@ public class ChnParser {
 			.option(statement0)
 			.repeat(rule().sep(";", Token.EOL).option(statement0))
 			.sep("}");
+	Parser caseof		= rule(CaseOf.class)
+			.sep("当条件等于")
+			.or
+			(
+				rule().number(NumberLiteral.class),
+				rule().identifier(Name.class, reserved),
+				rule().string(StringLiteral.class)
+			)
+			.option(rule().sep(Token.EOL))
+			.ast(block);
+	Parser caseofblock = rule(CaseOfBlock.class)
+			.option(rule().sep(Token.EOL))
+			.sep("{")
+			.option(rule().sep(Token.EOL))
+			.ast(caseof)
+			.repeat(rule().sep(";", Token.EOL).option(caseof))
+			.sep("}");
 	Parser simple 		= rule(PrimaryExpr.class).ast(expr).option(args0);
 	Parser statement 	= statement0
 			.or
 			(
 				rule(IfStmnt.class).sep("如果").ast(expr).sep("那么").ast(block).option(rule().sep("否则").ast(block)),
 				rule(WhileStmnt.class).sep("当满足条件").ast(expr).sep("循环执行").ast(block),
+				rule(SwitchStmnt.class).sep("根据条件").ast(expr).sep("选择执行").option(rule().sep(Token.EOL)).ast(caseofblock),
 				simple
 			);
 	
