@@ -5,8 +5,8 @@
 <p style="padding-left:20px;">
 --在eclipse或ide中运行com.jrj.stroll.complier.dust.DustApp，或打包运行<br/>
 --在浏览器输入：http://localhost:8080/stroll/complier-dust/parser<br/>
---中文语法分析器 : com.jrj.stroll.complier.dust.parser.ChnParser
---中文语法解释器 : com.jrj.stroll.complier.dust.calc.ChnEvaluator
+--中文语法分析器 : com.jrj.stroll.complier.dust.parser.ChnParser<br/>
+--中文语法解释器 : com.jrj.stroll.complier.dust.calc.ChnEvaluator<br/>
 在左边框输入代码<br/>
 演示-：while 和 if .. else ..<br/>
 <pre>
