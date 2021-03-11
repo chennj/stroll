@@ -14,17 +14,22 @@ public class CaseOfBlock extends ASTreeCompound{
 		return this.numChildren();
 	}
 	
-	public CaseOf caseOf(int i){
-		return (CaseOf) child(i);
+	public ASTree caseOf(int i){
+		return child(i);
 	}
 	
 	@Override
 	public Object eval(IEnvironment env){
-		for (int i = 0; i < size(); i++){
-			Object c = caseOf(i).condition();
+		int size = size();
+		for (int i = 0; i < size; i++){
+			ASTree o = caseOf(i);
+			if (i == size-1 && o instanceof CaseOfDefault){
+				return o.eval(env);
+			}
+			Object c = ((CaseOf)o).condition();
 			Object c1 = env.get("switch_condition_result");
 			if (String.valueOf(c).equals(String.valueOf(c1))){
-				return caseOf(i).eval(env);
+				return o.eval(env);
 			}
 		}
 		return 0;

@@ -306,9 +306,10 @@ public class ParserController {
 					logger.info("\nprogram code ---- \n"+code);
 					ArrayList<String> rets = new ArrayList<>();
 					chnEvaluator.run(code, rets);
-					for (String s : rets){
-						result += s + "<br>";
-					}
+					//for (String s : rets){
+					//	result += s + "<br>";
+					//}
+					result = "执行结果" + rets.get(rets.size()-1);
 				}
 			} catch (DustException e) {
 				e.printStackTrace();

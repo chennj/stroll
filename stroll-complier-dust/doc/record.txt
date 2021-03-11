@@ -48,19 +48,46 @@ def foo(y) {x}
 def bar(x) {foo(x+1)}
 bar(3)
 
-n = 2
-switch (n)
+def select(n)
+{
+	switch (n)
+	{
+		caseof 1
+		{
+			a=4
+		}
+		caseof 2
+		{
+			a=3
+		}
+		caseof 3
+		{
+			a=2
+		}
+		caseof 4
+		{
+			a=1
+		}
+	}
+}
+
+s=1
+switch (select(s))
 {
 	caseof 1
 	{
-		a=1
+		"select 1"
 	}
 	caseof 2
 	{
-		a=2
+		"select 2"
 	}
-	caseof 2
+	caseof 3
 	{
-		a=3
+		"select 3"
+	}
+	default
+	{
+		"nothing"
 	}
 }

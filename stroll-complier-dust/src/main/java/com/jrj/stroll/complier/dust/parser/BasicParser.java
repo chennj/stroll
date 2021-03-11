@@ -9,6 +9,7 @@ import com.jrj.stroll.complier.dust.ast.BinaryExpr;
 import com.jrj.stroll.complier.dust.ast.BlockStmnt;
 import com.jrj.stroll.complier.dust.ast.CaseOf;
 import com.jrj.stroll.complier.dust.ast.CaseOfBlock;
+import com.jrj.stroll.complier.dust.ast.CaseOfDefault;
 import com.jrj.stroll.complier.dust.ast.Name;
 import com.jrj.stroll.complier.dust.ast.IfStmnt;
 import com.jrj.stroll.complier.dust.ast.NegativeExpr;
@@ -66,12 +67,17 @@ public class BasicParser {
 			)
 			.option(rule().sep(Token.EOL))
 			.ast(block);
+	Parser caseofdef	= rule(CaseOfDefault.class)
+			.sep("default")
+			.option(rule().sep(Token.EOL))
+			.ast(block);
 	Parser caseofblock = rule(CaseOfBlock.class)
 			.option(rule().sep(Token.EOL))
 			.sep("{")
 			.option(rule().sep(Token.EOL))
 			.ast(caseof)
 			.repeat(rule().sep(";", Token.EOL).option(caseof))
+			.option(rule().ast(caseofdef).sep(";",Token.EOL))
 			.sep("}");
 	Parser statement 	= statement0
 			.or

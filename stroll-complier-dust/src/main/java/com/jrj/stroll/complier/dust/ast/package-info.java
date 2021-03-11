@@ -57,6 +57,7 @@ package com.jrj.stroll.complier.dust.ast;
  * -- def			: "def" IDENTIFIER param_list block
  * 					函数
  * -- caseof		: "caseof" expr block
+ * -- caseofdefault	: "default" block
  * -- caseofblock	: "{" caseof { (";" | EOL) [ caseof ] } "}"
  * -- primary 		: ( "(" expr ")" | NUMBER | IDENTIFIER | STRING ) { postfix }
  * 					| " fun " param_list block #闭包
