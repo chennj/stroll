@@ -39,7 +39,7 @@ public class ASTreeLeaf extends ASTree{
 
 	@Override
 	public String location() {
-		return "at line " + token.getLineNumber();
+		return "在第 " + token.getLineNumber() + " 行。";
 	}
 	
 	@Override
@@ -49,7 +49,7 @@ public class ASTreeLeaf extends ASTree{
 
 	@Override
 	public Object eval(IEnvironment env) throws DustException{
-		throw new DustException("CANNOT EVAL: " + toString(), this);
+		throw new DustException("不能执行：" + toString(), this);
 	}
 
 	

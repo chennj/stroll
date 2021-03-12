@@ -9,16 +9,42 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
 	<script type="text/javascript" src="${request.contextPath}/static/js/jQuery-2.2.0.min.js"></script>
 	<style>
-	.content{
+	body *{
+		padding:0px;
+		margin: 0px;
+	}
+	.header{
+		height:30px;
+		width:100%;
+		overflow:auto;
+		border-style: solid;
+  		border-width: 1px;
+  		border-radius:5px;
+  		margin-bottom:10px;
+	}
+	.header>div{
 		padding:4px 4px;
+	}
+	.tag{
+		font: 12px/1.5 Tahoma,Helvetica,Arial,'宋体',sans-serif;
+		margin-left:20px;
+		padding:2px 1px;
+		border-style: solid;
+  		border-width: 1px;
+  		border-radius:2px;
+	}
+	.content{
+		height:auto;
+		padding:2px 1px;
 		overflow:auto;
 		border-style: solid;
   		border-width: 1px;
   		border-radius:5px;
 	}
+
 	.content *{
-		padding:0 0;
-		margin: 0 0;
+		padding:0px;
+		margin: 0px;
 	}
 	.content .left{
 		height:99%;
@@ -30,10 +56,10 @@
 		height: 90%;
 		display:block;
 		background: #fffafa;
-		font-family: "Helvetica", "Arial", "Verdana", "宋体";
-		//font-weight: bold;
+		font-family: 'FangSong', '微软雅黑', 'KaiTi_GB2312', Helvetica, 'Hiragino Sans GB', Arial, sans-serif;
+		font-weight: bold;
 		padding:1px 5px;
-		font-size:15px;
+		font-size:13px;
 		color:#228b22;
 		border-style: solid;
   		border-width: 1px;
@@ -65,11 +91,14 @@
   		overflow: auto;
 	}	
 	.content button{
-		padding: 2px 8px;
+		padding: 0px 8px;
 	}
 	</style>
 </head>
 <body>
+<div class="header">
+	<div><strong>默认库:</strong><span class="tag">规则一</span><span class="tag">规则二</span><span class="tag">规则三</span><span class="tag">计算斐波那契数</span></div>
+</div>
 <div class="content">
 	<div class="left">
 		<textarea rows="" cols="" id="code" class="textbox"></textarea>
@@ -96,9 +125,9 @@ var window_width=0;
 //var webRoot = "${request.contextPath}/";
 
 $(document).ready(function(){
-	window_height = $(window).innerHeight()-30;
-	window_width = $(window).innerWidth()-30;
-	$(".content").css({"height":window_height,"width":window_width});
+	window_height 	= $(window).innerHeight() - 30;
+	window_width 	= $(window).innerWidth()  - 19;
+	$(".content").css({"height":(window_height-40),"width":window_width});
 });
 
 function lexer(){

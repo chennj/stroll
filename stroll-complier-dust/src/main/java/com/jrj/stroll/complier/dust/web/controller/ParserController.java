@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jrj.stroll.complier.dust.ast.ASTree;
-import com.jrj.stroll.complier.dust.calc.BasicEvaluator;
-import com.jrj.stroll.complier.dust.calc.ChnEvaluator;
-import com.jrj.stroll.complier.dust.calc.FuncEvaluator;
+import com.jrj.stroll.complier.dust.calc.BasicInterpreter;
+import com.jrj.stroll.complier.dust.calc.ChnInterpreter;
+import com.jrj.stroll.complier.dust.calc.FuncInterpreter;
 import com.jrj.stroll.complier.dust.exception.DustException;
 import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
@@ -41,19 +41,19 @@ public class ParserController {
 	private BasicParser basicParser;
 	
 	@Autowired
-	private BasicEvaluator basicEvaluator;
+	private BasicInterpreter basicInterpreter;
 	
 	@Autowired
 	private FuncParser funcParser;
 	
 	@Autowired
-	private FuncEvaluator funcEvaluator;
+	private FuncInterpreter funcInterpreter;
 	
 	@Autowired
 	private ChnParser chnParser;
 	
 	@Autowired
-	private ChnEvaluator chnEvaluator;
+	private ChnInterpreter chnInterpreter;
 	
 	@RequestMapping(value = {"","/code-dialog"})
 	public String codeDialog(HttpServletRequest request, HttpServletResponse response) {
@@ -154,7 +154,7 @@ public class ParserController {
 				} else {
 					logger.info("\nprogram code ---- \n"+code);
 					ArrayList<String> rets = new ArrayList<>();
-					basicEvaluator.run(code, rets);
+					basicInterpreter.run(code, rets);
 					for (String s : rets){
 						result += s + "<br>";
 					}
@@ -229,7 +229,7 @@ public class ParserController {
 				} else {
 					logger.info("\nprogram code ---- \n"+code);
 					ArrayList<String> rets = new ArrayList<>();
-					funcEvaluator.run(code, rets);
+					funcInterpreter.run(code, rets);
 					for (String s : rets){
 						result += s + "<br>";
 					}
@@ -305,7 +305,7 @@ public class ParserController {
 				} else {
 					logger.info("\nprogram code ---- \n"+code);
 					ArrayList<String> rets = new ArrayList<>();
-					chnEvaluator.run(code, rets);
+					chnInterpreter.run(code, rets);
 					//for (String s : rets){
 					//	result += s + "<br>";
 					//}

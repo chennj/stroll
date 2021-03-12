@@ -18,7 +18,7 @@ public class Name extends ASTreeLeaf{
 	public Object eval(IEnvironment env) throws DustException{
 		Object value = env.get(name());
 		if (null == value){
-			throw new DustException("undefined name:" + name(), this);
+			throw new DustException("未定义的变量：" + name(), this);
 		} else {
 			return value;
 		}

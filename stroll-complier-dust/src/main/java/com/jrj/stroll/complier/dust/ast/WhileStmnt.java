@@ -3,7 +3,7 @@ package com.jrj.stroll.complier.dust.ast;
 import java.util.List;
 
 import com.jrj.stroll.complier.dust.calc.IEnvironment;
-import static com.jrj.stroll.complier.dust.calc.BasicEvaluator.*;
+import static com.jrj.stroll.complier.dust.calc.BasicInterpreter.*;
 
 public class WhileStmnt extends ASTreeCompound{
 

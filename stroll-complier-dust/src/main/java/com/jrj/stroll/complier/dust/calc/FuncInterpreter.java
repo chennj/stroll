@@ -6,19 +6,25 @@ import org.springframework.stereotype.Component;
 
 import com.jrj.stroll.complier.dust.ast.ASTree;
 import com.jrj.stroll.complier.dust.ast.NullStmnt;
+import com.jrj.stroll.complier.dust.exception.DustException;
 import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
 import com.jrj.stroll.complier.dust.lexical.Token;
-import com.jrj.stroll.complier.dust.parser.ClosureParser;
+import com.jrj.stroll.complier.dust.parser.FuncParser;
 
+/**
+ * 
+ * @author chenn
+ *
+ */
 @Component
-public class ClosureEvaluator extends FuncEvaluator{
-
+public class FuncInterpreter extends BasicInterpreter{
+	
 	@Override
-	public void run(String code, List<String> result) throws ParseException{
+	public void run(String code, List<String> result) throws DustException, ParseException{
 		
-		ClosureParser p = new ClosureParser();
-		IEnvironment env = new NestedEnv();
+		FuncParser p = new FuncParser();
+		IEnvironment env = new BasicNatives().environment(new NestedEnv());
 		
 		Lexer lexer = new Lexer(code);
 		Token tmp;

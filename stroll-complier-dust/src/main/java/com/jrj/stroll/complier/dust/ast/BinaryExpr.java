@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.jrj.stroll.complier.dust.calc.IEnvironment;
 import com.jrj.stroll.complier.dust.exception.DustException;
-import static com.jrj.stroll.complier.dust.calc.BasicEvaluator.*;
+import static com.jrj.stroll.complier.dust.calc.BasicInterpreter.*;
 
 public class BinaryExpr extends ASTreeCompound{
 	
@@ -43,7 +43,7 @@ public class BinaryExpr extends ASTreeCompound{
 			env.put(((Name)l).name(), rvalue);
 			return rvalue;
 		} else {
-			throw new DustException("bad assignment", this);
+			throw new DustException("赋值错误", this);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class BinaryExpr extends ASTreeCompound{
 					return left.equals(right) ? TRUE:FALSE;
 				}
 			} else {
-				throw new DustException("bad type", this);
+				throw new DustException("类型错误：", this);
 			}
 		}
 	}
@@ -106,7 +106,7 @@ public class BinaryExpr extends ASTreeCompound{
 		case "或者":
 			return (a == TRUE || b == TRUE) ? TRUE : FALSE;
 		default:
-			throw new DustException("bad operator",this);
+			throw new DustException("运算符错误：",this);
 		}
 	}	
 	

@@ -54,7 +54,7 @@ public class ASTreeCompound extends ASTree{
 
 	@Override
 	public Object eval(IEnvironment env) {
-		throw new DustException("CANNOT EVAL: " + toString(), this);
+		throw new DustException("不能执行： " + toString(), this);
 	}
 
 	

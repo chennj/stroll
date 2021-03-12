@@ -26,7 +26,7 @@ public class NegativeExpr extends ASTreeCompound{
 		if (v instanceof Integer){
 			return new Integer(-((Integer)v).intValue());
 		} else {
-			throw new DustException("bad type for -", this);
+			throw new DustException("错误的类型 -", this);
 		}
 	}
 	

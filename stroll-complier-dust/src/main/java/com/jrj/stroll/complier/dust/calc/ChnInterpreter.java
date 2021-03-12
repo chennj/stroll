@@ -9,18 +9,20 @@ import com.jrj.stroll.complier.dust.ast.NullStmnt;
 import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
 import com.jrj.stroll.complier.dust.lexical.Token;
-import com.jrj.stroll.complier.dust.parser.BasicParser;
+import com.jrj.stroll.complier.dust.parser.ChnParser;
 
+/**
+ * 中文代码解释器
+ * @author chenn
+ *
+ */
 @Component
-public class BasicEvaluator {
-
-	public static final int TRUE = 1;
-	public static final int FALSE = 0;
+public class ChnInterpreter extends BasicInterpreter{
 	
 	public void run(String code, List<String> result) throws ParseException{
 		
-		BasicParser p = new BasicParser();
-		IEnvironment env = new BasicEnv();
+		ChnParser p = new ChnParser();
+		IEnvironment env = new BasicNatives().environment(new NestedEnv());
 		
 		Lexer lexer = new Lexer(code);
 		while (lexer.peek(0) != Token.EOF){
