@@ -21,7 +21,7 @@ public class BasicNatives {
 		append(env, "toInt", BasicNatives.class, "toInt", Object.class);
 		append(env, "currentTime", BasicNatives.class, "currentTime");
 		// ------------
-		append(env, "计算斐波那契数", BasicNatives.class, "fib", Object.class);
+		append(env, "计算斐波那契数", BasicNatives.class, "fib", Double.class);
 		append(env, "规则一", BasicNatives.class, "excuRules01", Object.class);
 		append(env, "规则二", BasicNatives.class, "excuRules02", Object.class);
 		append(env, "规则三", BasicNatives.class, "excuRules03", Object.class);
@@ -33,10 +33,10 @@ public class BasicNatives {
 		try {
 			m = clazz.getMethod(methodName, params);
 		} catch (Exception e){
-			throw new DustException("未能找到函数: " + methodName);
+			throw new DustException("未能找到函数: " + name);
 		}
 		
-		env.put(name, new NativeFunction(methodName, m));
+		env.put(name, new NativeFunction(name, m));
 	}
 	
 	public static int print(Object o){
@@ -68,12 +68,12 @@ public class BasicNatives {
 		return (int)(System.currentTimeMillis() - startTime);
 	}
 	
-	public static int fib(Object n){
-		int in = Integer.valueOf(n.toString());
-		if (in < 2){
-			return in;
+	public static double fib(Double n){
+		//int in = Integer.valueOf(n.toString());
+		if (n < 2){
+			return n;
 		} else {
-			return fib(in-2) + fib(in-1);
+			return fib(n-2) + fib(n-1);
 		}
 	}
 	

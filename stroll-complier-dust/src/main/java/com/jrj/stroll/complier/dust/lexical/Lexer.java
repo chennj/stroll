@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,6 +20,8 @@ import com.jrj.stroll.complier.dust.exception.ParseException;
  */
 public class Lexer {
 	
+	public static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 	/**
 	 * document
 	 * -- http://www.regular-expressions.info/unicode.html#prop
@@ -28,7 +32,7 @@ public class Lexer {
 	public static String regexPat = 
 			"\\s*("
 			+ "(//.*)|"
-			+ "([0-9]+)|"
+			+ "([0-9]+(\\.\\d+)?)|"
 			+ "(\"(\\\\\"|\\\\\\\\|\\\\n|[^\"])*\")|"
 			+ "[A-Z_a-z_\u4E00-\u9FA5][A-Z_a-z_\u4E00-\u9FA5_0-9]*|"
 			+ "==|\u7b49\u4e8e|"
@@ -122,10 +126,15 @@ public class Lexer {
 			if (null == matcher.group(2)){
 				//如果不是注释
 				Token token;
-				if (null != matcher.group(3)){
-					token = new NumToken(lineNo, Integer.parseInt(m));
-				} else if (null != matcher.group(4)){
-					token = new StrToken(lineNo, toStringLiteral(m));
+				if (null != matcher.group(3) || null != matcher.group(4)){
+					token = new NumToken(lineNo, Double.parseDouble(m));
+				} else if (null != matcher.group(5)){
+					try {
+						Timestamp date = new Timestamp(sf.parse(toStringLiteral(m)).getTime());
+						token = new DatetimeToken(lineNo, date);
+					} catch (java.text.ParseException e) {
+						token = new StrToken(lineNo, toStringLiteral(m));
+					}
 				} else {
 					token = new IdToken(lineNo, m);
 				}
@@ -156,9 +165,9 @@ public class Lexer {
 	
 	protected static class NumToken extends Token{
 
-		private int value;
+		private Double value;
 		
-		protected NumToken(int line, int val) {
+		protected NumToken(int line, Double val) {
 			super(line);
 			value = val;
 		}
@@ -169,13 +178,13 @@ public class Lexer {
 		}
 
 		@Override
-		public int getNumber() {
+		public Double getNumber() {
 			return value;
 		}
 
 		@Override
 		public String getText() {
-			return Integer.toString(value);
+			return Double.toString(value);
 		}
 		
 	}
@@ -219,7 +228,37 @@ public class Lexer {
 		public String getText() {
 			return literal;
 		}
-
 		
+	}
+	
+	protected static class DatetimeToken extends Token{
+
+		private Timestamp value;
+		
+		protected DatetimeToken(int line, Timestamp dateTime) {
+			super(line);
+			value = dateTime;
+		}
+		
+		@Override
+		public boolean isDatetime(){
+			return true;
+		}
+		
+		@Override
+		public Timestamp getDatetime(){
+			return value;
+		}
+		
+		@Override
+		public String getText() {
+			return sf.format(value);
+		}
+	}
+	
+	public static void main(String[] args) throws Exception{
+		
+		Timestamp date = new Timestamp(sf.parse("2020-02-12 00:00:00").getTime());
+		System.out.print(sf.format(date));
 	}
 }

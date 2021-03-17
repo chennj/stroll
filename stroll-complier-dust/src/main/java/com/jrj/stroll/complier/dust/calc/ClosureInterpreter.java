@@ -12,7 +12,7 @@ import com.jrj.stroll.complier.dust.lexical.Token;
 import com.jrj.stroll.complier.dust.parser.ClosureParser;
 
 @Component
-public class ClosureInterpreter extends FuncInterpreter{
+public class ClosureInterpreter extends BasicInterpreter{
 
 	@Override
 	public void run(String code, List<String> result) throws ParseException{

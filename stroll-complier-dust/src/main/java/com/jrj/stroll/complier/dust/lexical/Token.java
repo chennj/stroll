@@ -1,5 +1,7 @@
 package com.jrj.stroll.complier.dust.lexical;
 
+import java.sql.Timestamp;
+
 import com.jrj.stroll.complier.dust.exception.DustException;
 
 /**
@@ -66,11 +68,27 @@ public abstract class Token {
 	}
 	
 	/**
+	 * 是否日期
+	 * @return
+	 */
+	public boolean isDatetime(){
+		return false;
+	}
+	
+	/**
 	 * 获得数字
 	 * @return
 	 */
-	public int getNumber(){
+	public Double getNumber(){
 		throw new DustException("not number token");
+	}
+	
+	/**
+	 * 获取日期
+	 * @return
+	 */
+	public Timestamp getDatetime(){
+		throw new DustException("not Timestamp token");
 	}
 	
 	/**

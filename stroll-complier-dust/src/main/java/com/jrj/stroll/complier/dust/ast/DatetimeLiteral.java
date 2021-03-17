@@ -1,16 +1,18 @@
 package com.jrj.stroll.complier.dust.ast;
 
+import java.sql.Timestamp;
+
 import com.jrj.stroll.complier.dust.calc.IEnvironment;
 import com.jrj.stroll.complier.dust.lexical.Token;
 
-public class NumberLiteral extends ASTreeLeaf{
+public class DatetimeLiteral extends ASTreeLeaf{
 
-	public NumberLiteral(Token token) {
+	public DatetimeLiteral(Token token) {
 		super(token);
 	}
 
-	public Double value(){
-		return token().getNumber();
+	public Timestamp value(){
+		return token().getDatetime();
 	}
 
 	@Override

@@ -261,6 +261,24 @@ public class Parser {
 	}
 	
 	/**
+	 * Datetime Token 语法分析器
+	 * @author chenn
+	 *
+	 */
+	protected static class DatetimeToken extends AToken{
+
+		protected DatetimeToken(Class<? extends ASTreeLeaf> type) {
+			super(type);
+		}
+
+		@Override
+		protected boolean test(Token t) {
+			return t.isDatetime();
+		}
+		
+	}
+	
+	/**
 	 * String Token 语法分析器
 	 * @author chenn
 	 *
@@ -302,7 +320,7 @@ public class Parser {
 				}
 			}
 			if (tokens.length > 0){
-				throw new ParseException(tokens[0] + " expected.", t);
+				throw new ParseException(tokens[0] + " 预期.", t);
 			} else {
 				throw new ParseException(t);
 			}
@@ -574,6 +592,14 @@ public class Parser {
 	}	
 	public Parser number(Class<? extends ASTreeLeaf> clz) {
 		elements.add(new NumToken(clz));
+		return this;
+	}
+	
+	public Parser datetime(){
+		return datetime(null);
+	}	
+	public Parser datetime(Class<? extends ASTreeLeaf> clz) {
+		elements.add(new DatetimeToken(clz));
 		return this;
 	}
 

@@ -11,6 +11,7 @@ import com.jrj.stroll.complier.dust.ast.BlockStmnt;
 import com.jrj.stroll.complier.dust.ast.CaseOf;
 import com.jrj.stroll.complier.dust.ast.CaseOfBlock;
 import com.jrj.stroll.complier.dust.ast.CaseOfDefault;
+import com.jrj.stroll.complier.dust.ast.DatetimeLiteral;
 import com.jrj.stroll.complier.dust.ast.DefStmnt;
 import com.jrj.stroll.complier.dust.ast.Name;
 import com.jrj.stroll.complier.dust.ast.IfStmnt;
@@ -49,7 +50,8 @@ public class ChnParser {
 				rule().sep("(").ast(expr0).sep(")"),
 				rule().number(NumberLiteral.class),
 				rule().identifier(Name.class, reserved),
-				rule().string(StringLiteral.class)
+				rule().string(StringLiteral.class),
+				rule().datetime(DatetimeLiteral.class)
 			)
 			.repeat(postfix0);
 	Parser factor 		= rule()
@@ -69,7 +71,8 @@ public class ChnParser {
 			(
 				rule().number(NumberLiteral.class),
 				rule().identifier(Name.class, reserved),
-				rule().string(StringLiteral.class)
+				rule().string(StringLiteral.class),
+				rule().datetime(DatetimeLiteral.class)
 			)
 			.sep(")")
 			.sep("执行")
@@ -122,28 +125,32 @@ public class ChnParser {
 		reserved.add(")");
 		reserved.add(Token.EOL);
 		
-		operators.add("=", 		1, Operators.RIGHT);
-		operators.add("取值", 	1, Operators.RIGHT);
-		operators.add("&&", 	1, Operators.LEFT);
-		operators.add("并且", 	1, Operators.LEFT);
-		operators.add("||", 	1, Operators.LEFT);
-		operators.add("或者", 	1, Operators.LEFT);
-		operators.add("==", 	2, Operators.LEFT);
-		operators.add("等于", 	2, Operators.LEFT);
-		operators.add(">", 		2, Operators.LEFT);
-		operators.add("大于", 	2, Operators.LEFT);
-		operators.add("<", 		2, Operators.LEFT);
-		operators.add("小于", 	2, Operators.LEFT);
-		operators.add("+", 		3, Operators.LEFT);
-		operators.add("加", 		3, Operators.LEFT);
-		operators.add("-", 		3, Operators.LEFT);
-		operators.add("减", 		3, Operators.LEFT);
-		operators.add("*", 		4, Operators.LEFT);
-		operators.add("乘", 		4, Operators.LEFT);
-		operators.add("/", 		4, Operators.LEFT);
-		operators.add("除", 		4, Operators.LEFT);
-		operators.add("%", 		4, Operators.LEFT);
-		operators.add("模", 		4, Operators.LEFT);
+		operators.add("=", 			1, Operators.RIGHT);
+		operators.add("取值", 		1, Operators.RIGHT);
+		operators.add("&&", 		1, Operators.LEFT);
+		operators.add("并且", 		1, Operators.LEFT);
+		operators.add("||", 		1, Operators.LEFT);
+		operators.add("或者", 		1, Operators.LEFT);
+		operators.add("==", 		2, Operators.LEFT);
+		operators.add("等于", 		2, Operators.LEFT);
+		operators.add(">", 			2, Operators.LEFT);
+		operators.add("大于", 		2, Operators.LEFT);
+		operators.add(">=", 		2, Operators.LEFT);
+		operators.add("大于或等于", 	2, Operators.LEFT);
+		operators.add("<", 			2, Operators.LEFT);
+		operators.add("小于", 		2, Operators.LEFT);
+		operators.add("<=", 		2, Operators.LEFT);
+		operators.add("小于或等于", 	2, Operators.LEFT);
+		operators.add("+", 			3, Operators.LEFT);
+		operators.add("加", 			3, Operators.LEFT);
+		operators.add("-", 			3, Operators.LEFT);
+		operators.add("减", 			3, Operators.LEFT);
+		operators.add("*", 			4, Operators.LEFT);
+		operators.add("乘", 			4, Operators.LEFT);
+		operators.add("/", 			4, Operators.LEFT);
+		operators.add("除", 			4, Operators.LEFT);
+		operators.add("%", 			4, Operators.LEFT);
+		operators.add("模", 			4, Operators.LEFT);
 	}
 	
 	public ASTree parse(Lexer lexer) throws ParseException{

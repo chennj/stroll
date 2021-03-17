@@ -66,7 +66,7 @@ package com.jrj.stroll.complier.dust.ast;
  * -- expr 			: factor { OP factor }
  * -- args			: expr {"," expr}
  * 					实参
- * -- postfix		: "(" [ args ] ")"
+ * -- postfix		: "(" [ args ] ")" | "."IDENTIFIER
  * 					表示括号括起的表达式、整形字面量、标识符（变量名）、字符串字面量
  * 					表示两个 factor 之间夹有一个双目运算符的组合
  * -- block 		: "{" [ statement ] { (";" | EOL) [ statement ] } "}"
@@ -79,6 +79,11 @@ package com.jrj.stroll.complier.dust.ast;
  * 					| "switch" expr caseofblock
  * 					| simple
  * 					语句的组成规则：if、while、simple
+ * -----------------添加对类的支持------------------------------
+ * -- member		: def | simple
+ * -- class_body	: "{" [member] {(";"|EOL)[member]} "}"
+ * -- defclass		: "class" IDENTIFIER ["extends" IDENTIFIER] class_body
+ * -- ---------------------------------------------------------
  * -- program 		: [ def | statement ] (";" | EOL)
  * 					程序的组成：语句加“;”或则换行符，也可以是空语句
  */

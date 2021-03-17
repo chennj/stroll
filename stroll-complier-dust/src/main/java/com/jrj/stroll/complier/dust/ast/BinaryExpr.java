@@ -1,5 +1,6 @@
 package com.jrj.stroll.complier.dust.ast;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.jrj.stroll.complier.dust.calc.IEnvironment;
@@ -48,9 +49,13 @@ public class BinaryExpr extends ASTreeCompound{
 	}
 
 	protected Object computOp(Object left, String op, Object right) {
-		if (left instanceof Integer && right instanceof Integer){
-			return computeNumber((Integer)left, op, (Integer)right);
-		} else {
+		if (left instanceof Number && right instanceof Number){
+			return computeNumber((Number)left, op, (Number)right);
+		} 
+		else if (left instanceof Timestamp && right instanceof Timestamp){
+			return computeDatetime((Timestamp)left, op, (Timestamp)right);
+		}
+		else {
 			if (op.equals("+") || op.equals("加")){
 				return String.valueOf(left) + String.valueOf(right);
 			} else if (op.equals("==")){
@@ -65,9 +70,9 @@ public class BinaryExpr extends ASTreeCompound{
 		}
 	}
 
-	protected Object computeNumber(Integer left, String op, Integer right) {
-		int a = left.intValue();
-		int b = right.intValue();
+	protected Object computeNumber(Number left, String op, Number right) {
+		double a = left.doubleValue();
+		double b = right.doubleValue();
 		switch (op){
 		case "+":
 		case "加":
@@ -110,4 +115,27 @@ public class BinaryExpr extends ASTreeCompound{
 		}
 	}	
 	
+	protected Object computeDatetime(Timestamp left, String op, Timestamp right) {
+		Timestamp a = left;
+		Timestamp b = right;
+		switch (op){
+		case "==":
+		case "等于":
+			return a.getTime() == b.getTime() ? TRUE : FALSE;
+		case ">":
+		case "大于":
+			return a.getTime() > b.getTime() ? TRUE : FALSE;
+		case ">=":
+		case "大于或等于":
+			return a.getTime() >= b.getTime() ? TRUE : FALSE;
+		case "<":
+		case "小于":
+			return a.getTime() < b.getTime() ? TRUE : FALSE;
+		case "<=":
+		case "小于或等于":
+			return a.getTime() <= b.getTime() ? TRUE : FALSE;
+		default:
+			throw new DustException("日期暂时不提供这种运算：",this);
+		}
+	}
 }
