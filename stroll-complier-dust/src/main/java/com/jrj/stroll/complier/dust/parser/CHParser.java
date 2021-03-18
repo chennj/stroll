@@ -36,7 +36,7 @@ import static com.jrj.stroll.complier.dust.parser.Parser.rule;
  *
  */
 @Component
-public class ChnParser {
+public class CHParser {
 
 	HashSet<String> reserved 	= new HashSet<String>();
 	Operators operators 		= new Operators();
@@ -119,7 +119,7 @@ public class ChnParser {
 	/**
 	 * 构造函数
 	 */
-	public ChnParser(){
+	public CHParser(){
 		reserved.add(";");
 		reserved.add("}");
 		reserved.add(")");

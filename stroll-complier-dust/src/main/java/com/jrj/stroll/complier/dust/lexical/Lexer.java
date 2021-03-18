@@ -19,9 +19,7 @@ import com.jrj.stroll.complier.dust.exception.ParseException;
  *
  */
 public class Lexer {
-	
-	public static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
+		
 	/**
 	 * document
 	 * -- http://www.regular-expressions.info/unicode.html#prop
@@ -130,6 +128,12 @@ public class Lexer {
 					token = new NumToken(lineNo, Double.parseDouble(m));
 				} else if (null != matcher.group(5)){
 					try {
+						SimpleDateFormat sf;;
+						if (m.indexOf(":")>0){
+							sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						} else {
+							sf = new SimpleDateFormat("yyyy-MM-dd");
+						}
 						Timestamp date = new Timestamp(sf.parse(toStringLiteral(m)).getTime());
 						token = new DatetimeToken(lineNo, date);
 					} catch (java.text.ParseException e) {
@@ -252,13 +256,8 @@ public class Lexer {
 		
 		@Override
 		public String getText() {
-			return sf.format(value);
+			return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(value);
 		}
 	}
 	
-	public static void main(String[] args) throws Exception{
-		
-		Timestamp date = new Timestamp(sf.parse("2020-02-12 00:00:00").getTime());
-		System.out.print(sf.format(date));
-	}
 }

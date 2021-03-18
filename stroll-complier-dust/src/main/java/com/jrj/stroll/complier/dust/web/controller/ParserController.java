@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jrj.stroll.complier.dust.ast.ASTree;
 import com.jrj.stroll.complier.dust.calc.BasicInterpreter;
-import com.jrj.stroll.complier.dust.calc.ChnInterpreter;
+import com.jrj.stroll.complier.dust.calc.CHInterpreter;
 import com.jrj.stroll.complier.dust.calc.FuncInterpreter;
 import com.jrj.stroll.complier.dust.exception.DustException;
 import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
 import com.jrj.stroll.complier.dust.lexical.Token;
 import com.jrj.stroll.complier.dust.parser.BasicParser;
-import com.jrj.stroll.complier.dust.parser.ChnParser;
+import com.jrj.stroll.complier.dust.parser.CHParser;
 import com.jrj.stroll.complier.dust.parser.FuncParser;
 import com.jrj.stroll.complier.dust.util.LexerRunner;
 
@@ -50,10 +50,10 @@ public class ParserController {
 	private FuncInterpreter funcInterpreter;
 	
 	@Autowired
-	private ChnParser chnParser;
+	private CHParser chnParser;
 	
 	@Autowired
-	private ChnInterpreter chnInterpreter;
+	private CHInterpreter chnInterpreter;
 	
 	@RequestMapping(value = {"","/code-dialog"})
 	public String codeDialog(HttpServletRequest request, HttpServletResponse response) {

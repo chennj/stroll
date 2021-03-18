@@ -52,8 +52,8 @@ public class BinaryExpr extends ASTreeCompound{
 		if (left instanceof Number && right instanceof Number){
 			return computeNumber((Number)left, op, (Number)right);
 		} 
-		else if (left instanceof Timestamp && right instanceof Timestamp){
-			return computeDatetime((Timestamp)left, op, (Timestamp)right);
+		else if (left instanceof Timestamp || right instanceof Timestamp){
+			return computeDatetime(left, op, right);
 		}
 		else {
 			if (op.equals("+") || op.equals("加")){
@@ -115,25 +115,47 @@ public class BinaryExpr extends ASTreeCompound{
 		}
 	}	
 	
-	protected Object computeDatetime(Timestamp left, String op, Timestamp right) {
-		Timestamp a = left;
-		Timestamp b = right;
+	protected Object computeDatetime( Object left, String op, Object right) {
+		long a,b;
+		if (!(left instanceof Double) && !(right instanceof Double))
+		{
+			if (!(left instanceof Timestamp) || !(right instanceof Timestamp)){
+				throw new DustException("日期运算类型错误：",this);
+			}
+		}
+		
+		if (left instanceof Timestamp && right instanceof Double){
+			a = ((Timestamp)left).getTime();
+			b = ((Double)right).longValue();
+		} else if (right instanceof Timestamp && left instanceof Double){
+			a = ((Timestamp)right).getTime();
+			b = ((Double)left).longValue();			
+		} else {
+			a = ((Timestamp)left).getTime();
+			b = ((Timestamp)right).getTime();			
+		}
 		switch (op){
+		case "+":
+		case "加":
+			return a + b;
+		case "-":
+		case "减":
+			return a - b;
 		case "==":
 		case "等于":
-			return a.getTime() == b.getTime() ? TRUE : FALSE;
+			return a == b ? TRUE : FALSE;
 		case ">":
 		case "大于":
-			return a.getTime() > b.getTime() ? TRUE : FALSE;
+			return a > b ? TRUE : FALSE;
 		case ">=":
 		case "大于或等于":
-			return a.getTime() >= b.getTime() ? TRUE : FALSE;
+			return a >= b ? TRUE : FALSE;
 		case "<":
 		case "小于":
-			return a.getTime() < b.getTime() ? TRUE : FALSE;
+			return a < b ? TRUE : FALSE;
 		case "<=":
 		case "小于或等于":
-			return a.getTime() <= b.getTime() ? TRUE : FALSE;
+			return a <= b ? TRUE : FALSE;
 		default:
 			throw new DustException("日期暂时不提供这种运算：",this);
 		}

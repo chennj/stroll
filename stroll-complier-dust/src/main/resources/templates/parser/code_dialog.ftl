@@ -97,7 +97,13 @@
 </head>
 <body>
 <div class="header">
-	<div><strong>默认库:</strong><span class="tag">规则一</span><span class="tag">规则二</span><span class="tag">规则三</span><span class="tag">计算斐波那契数</span></div>
+	<div><strong>默认库:</strong>
+	<span class="tag">规则一</span>
+	<span class="tag">规则二</span>
+	<span class="tag">规则三</span>
+	<span class="tag">计算斐波那契数</span>
+	<span class="tag">转换为日期格式</span>
+	</div>
 </div>
 <div class="content">
 	<div class="left">

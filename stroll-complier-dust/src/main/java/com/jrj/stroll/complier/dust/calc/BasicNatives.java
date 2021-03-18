@@ -1,6 +1,7 @@
 package com.jrj.stroll.complier.dust.calc;
 
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 
 import javax.swing.JOptionPane;
 
@@ -8,6 +9,8 @@ import com.jrj.stroll.complier.dust.exception.DustException;
 
 public class BasicNatives {
 
+	protected static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 	public IEnvironment environment(IEnvironment env){
 		appendNatives(env);
 		return env;
@@ -25,6 +28,7 @@ public class BasicNatives {
 		append(env, "规则一", BasicNatives.class, "excuRules01", Object.class);
 		append(env, "规则二", BasicNatives.class, "excuRules02", Object.class);
 		append(env, "规则三", BasicNatives.class, "excuRules03", Object.class);
+		append(env, "转换为日期格式", BasicNatives.class, "toDate", Object.class);
 	}
 	
 	protected void append(IEnvironment env, String name, Class<?> clazz, String methodName, Class<?>...params)
@@ -78,17 +82,30 @@ public class BasicNatives {
 	}
 	
 	public static String excuRules01(Object o){
-		System.out.println();
-		return "执行了规则一("+(o==null ? "":o.toString())+")";
+		String s = o==null ? "":o.toString();
+		System.out.println("参数："+s);
+		return "执行了规则一("+s+")";
 	}
 	
 	public static String excuRules02(Object o){
-		System.out.println();
-		return "执行了规则二("+(o==null ? "":o.toString())+")";
+		String s = o==null ? "":o.toString();
+		System.out.println("参数："+s);
+		return "执行了规则二("+s+")";
 	}
 	
 	public static String excuRules03(Object o){
-		System.out.println();
-		return "执行了规则三("+(o==null ? "":o.toString())+")";
+		String s = o==null ? "":o.toString();
+		System.out.println("参数："+s);
+		return "执行了规则三("+s+")";
+	}
+	
+	public static String toDate(Object o){
+		try {
+			String s = sf.format(o);
+			System.out.println("时间："+s);
+			return s;
+		} catch (Exception e){
+			return e.getMessage();
+		}
 	}
 }

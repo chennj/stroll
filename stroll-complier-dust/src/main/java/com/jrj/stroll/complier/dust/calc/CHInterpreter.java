@@ -9,7 +9,7 @@ import com.jrj.stroll.complier.dust.ast.NullStmnt;
 import com.jrj.stroll.complier.dust.exception.ParseException;
 import com.jrj.stroll.complier.dust.lexical.Lexer;
 import com.jrj.stroll.complier.dust.lexical.Token;
-import com.jrj.stroll.complier.dust.parser.ChnParser;
+import com.jrj.stroll.complier.dust.parser.CHParser;
 
 /**
  * 中文代码解释器
@@ -17,11 +17,11 @@ import com.jrj.stroll.complier.dust.parser.ChnParser;
  *
  */
 @Component
-public class ChnInterpreter extends BasicInterpreter{
+public class CHInterpreter extends BasicInterpreter{
 	
 	public void run(String code, List<String> result) throws ParseException{
 		
-		ChnParser p = new ChnParser();
+		CHParser p = new CHParser();
 		IEnvironment env = new BasicNatives().environment(new NestedEnv());
 		
 		Lexer lexer = new Lexer(code);
