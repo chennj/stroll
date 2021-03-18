@@ -1,6 +1,7 @@
 package com.jrj.stroll.complier.dust.ast;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.jrj.stroll.complier.dust.calc.IEnvironment;
@@ -116,24 +117,48 @@ public class BinaryExpr extends ASTreeCompound{
 	}	
 	
 	protected Object computeDatetime( Object left, String op, Object right) {
-		long a,b;
-		if (!(left instanceof Double) && !(right instanceof Double))
-		{
-			if (!(left instanceof Timestamp) || !(right instanceof Timestamp)){
-				throw new DustException("日期运算类型错误：",this);
-			}
-		}
 		
-		if (left instanceof Timestamp && right instanceof Double){
-			a = ((Timestamp)left).getTime();
-			b = ((Double)right).longValue();
-		} else if (right instanceof Timestamp && left instanceof Double){
-			a = ((Timestamp)right).getTime();
-			b = ((Double)left).longValue();			
-		} else {
-			a = ((Timestamp)left).getTime();
-			b = ((Timestamp)right).getTime();			
+		long a=0,b=0;
+		
+		try {
+			if (left instanceof Timestamp){
+				SimpleDateFormat sf;
+				if (right instanceof Long){
+					b = (Long)right;
+				} else if (right instanceof Double){
+					b = ((Double)right).longValue();
+				} else {
+					String sl = String.valueOf(right);
+					if (sl.indexOf(":")>0){
+						sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					} else {
+						sf = new SimpleDateFormat("yyyy-MM-dd");
+					}
+					b = sf.parse(sl).getTime();
+				}
+				a = ((Timestamp)left).getTime();
+			} else {
+				SimpleDateFormat sf;
+				if (left instanceof Long){
+					a = (Long)left;
+				} else if (left instanceof Double){
+					a = ((Double)left).longValue();
+				} else {
+					String sr = String.valueOf(left);
+					if (sr.indexOf(":")>0){
+						sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					} else {
+						sf = new SimpleDateFormat("yyyy-MM-dd");
+					}
+					a = sf.parse(sr).getTime();
+				}
+				b = ((Timestamp)right).getTime();
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+			throw new DustException("日期运算类型错误：",this);
 		}
+
 		switch (op){
 		case "+":
 		case "加":
