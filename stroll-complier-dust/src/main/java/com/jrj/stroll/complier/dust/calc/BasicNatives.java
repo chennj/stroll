@@ -1,6 +1,7 @@
 package com.jrj.stroll.complier.dust.calc;
 
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 import javax.swing.JOptionPane;
@@ -29,6 +30,7 @@ public class BasicNatives {
 		append(env, "规则二", BasicNatives.class, "excuRules02", Object.class);
 		append(env, "规则三", BasicNatives.class, "excuRules03", Object.class);
 		append(env, "转换为日期格式", BasicNatives.class, "toDate", Object.class);
+		append(env, "现在", BasicNatives.class, "now");
 	}
 	
 	protected void append(IEnvironment env, String name, Class<?> clazz, String methodName, Class<?>...params)
@@ -107,5 +109,9 @@ public class BasicNatives {
 		} catch (Exception e){
 			return e.getMessage();
 		}
+	}
+	
+	public static Timestamp now(){
+		return new Timestamp(System.currentTimeMillis());
 	}
 }

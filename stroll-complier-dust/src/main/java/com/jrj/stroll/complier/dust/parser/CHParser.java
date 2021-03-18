@@ -94,7 +94,7 @@ public class CHParser {
 	Parser statement 	= statement0
 			.or
 			(
-				rule(IfStmnt.class).sep("如果").ast(expr).sep("那么").ast(block).option(rule().sep("否则").ast(block)),
+				rule(IfStmnt.class).sep("如果").ast(expr).sep("那么").ast(block).option(rule().sep(Token.EOL)).option(rule().sep("否则").ast(block)),
 				rule(WhileStmnt.class).sep("当满足条件").ast(expr).sep("循环执行").ast(block),
 				rule(SwitchStmnt.class).sep("根据条件").ast(expr).sep("选择").option(rule().sep(Token.EOL)).ast(caseofblock),
 				simple
